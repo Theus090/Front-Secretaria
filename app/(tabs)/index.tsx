@@ -4,7 +4,7 @@ import CartaoDePostagem, {
 import api from "@/lib/axios.config";
 import { FontAwesome } from "@expo/vector-icons";
 import { useFocusEffect, useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -22,14 +22,14 @@ const Home = () => {
   const [atualizando, setAtualizando] = useState(false);
 
   const buscarPostagens = useCallback(async () => {
-    const { data } = await api.get<Postagem[]>("/posts");
+    const { data } = await api.get<Postagem[]>("/tasks/listTask");
     setPostagens(data);
   }, []);
 
   useFocusEffect(
     useCallback(() => {
       buscarPostagens().finally(() => setCarregando(false));
-    }, [buscarPostagens])
+    }, [buscarPostagens]),
   );
 
   const aoAtualizar = async () => {

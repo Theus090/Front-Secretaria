@@ -1,12 +1,9 @@
-import Botao from "../components/botao/botao";
-import CampoDeTexto from "@/components/CampoDeTexto/CampoDeTexto";
 import CampoTextHookForm from "@/components/CampoTextoHookForm/CampoTextoHookForm";
-import StyledLinearGradient from "@/components/StyledLinearGradient/StyledLinearGradient";
 import "@/global.css";
 import useIndexViewModel from "@/ViewModel/useIndexViewModel";
 import { Link } from "expo-router";
-import React from "react";
 import { ActivityIndicator, ImageBackground, Text, View } from "react-native";
+import Botao from "../components/botao/botao";
 
 const App = () => {
   const { fontsLoaded, fontError, handleSubmit, onSubmit, control } =
@@ -38,7 +35,6 @@ const App = () => {
                 <Text className="text-white text-xl">Entrar</Text>
               </View>
             }
-
             onPress={handleSubmit(onSubmit)}
           />
         </View>

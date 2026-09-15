@@ -12,7 +12,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" />
         <Stack.Screen name="cadastro" />
         <Stack.Screen name="home" />
-        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="(tabs)" options={{ header: Header }} />
         <Stack.Screen name="posts/newPost" />
       </Stack>
     </QueryClientProvider>
