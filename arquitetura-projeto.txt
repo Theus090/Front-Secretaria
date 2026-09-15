@@ -1,0 +1,288 @@
+==================================================================
+ DOCUMENTO DE ARQUITETURA DO PROJETO — projeto_secretaria
+ Gerado em: 30/07/2026
+==================================================================
+
+------------------------------------------------------------------
+1. VISÃO GERAL
+------------------------------------------------------------------
+
+Este projeto é um app mobile (Android/iOS/Web) construído com Expo
+54 e Expo Router 6, usando TypeScript, React 19 e React Native 0.81.
+
+IMPORTANTE — estado atual do projeto:
+No momento em que este documento foi gerado, o projeto está no
+estado de "boilerplate" gerado pelo `create-expo-app` (template
+padrão com abas). Ou seja: as telas de exemplo (Home/Explore),
+os componentes visuais (ThemedText, ParallaxScrollView, HelloWave
+etc.) e os hooks de tema ainda são os arquivos de demonstração do
+Expo, não uma implementação de negócio do "projeto_secretaria".
+
+Já estão instaladas, porém, as bibliotecas que vão sustentar uma
+arquitetura MVVM daqui para frente:
+  - @tanstack/react-query  -> cache/estado assíncrono (camada ViewModel)
+  - axios                  -> cliente HTTP (camada Model/Service)
+  - react-hook-form + zod  -> formulários e validação (View <-> ViewModel)
+  - nativewind + tailwind  -> estilização utilitária (View)
+
+Este documento explica (a) a estrutura atual pasta a pasta,
+(b) as tecnologias em uso e para que servem, e (c) como aplicar
+MVVM dentro das convenções do Expo Router, incluindo a estrutura
+de pastas recomendada para o código de negócio que ainda será
+criado.
+
+------------------------------------------------------------------
+2. ÁRVORE DE PASTAS ATUAL (raiz do projeto)
+------------------------------------------------------------------
+
+projeto_secretaria/
+├── app/                        Rotas do app (Expo Router = file-based routing)
+│   ├── _layout.tsx              Layout raiz: fontes, splash screen, providers globais
+│   ├── modal.tsx                 Tela apresentada como modal
+│   └── (tabs)/                   Grupo de rotas com navegação em abas
+│       ├── _layout.tsx           Define as abas (Home, Explore) e ícones
+│       ├── index.tsx             Tela "Home" (rota "/")
+│       └── explore.tsx           Tela "Explore" (rota "/explore")
+│
+├── components/                 Componentes de UI reutilizáveis (camada View)
+│   ├── external-link.tsx         Link que abre navegador externo
+│   ├── haptic-tab.tsx            Botão de aba com feedback tátil
+│   ├── hello-wave.tsx             Ícone animado (exemplo)
+│   ├── parallax-scroll-view.tsx   ScrollView com efeito parallax no header
+│   ├── themed-text.tsx            <Text> que respeita tema claro/escuro
+│   ├── themed-view.tsx            <View> que respeita tema claro/escuro
+│   └── ui/
+│       ├── collapsible.tsx        Componente "accordion" simples
+│       ├── icon-symbol.tsx        Ícone (SFSymbols no iOS / MaterialIcons fallback)
+│       └── icon-symbol.ios.tsx    Variante específica de iOS (resolução por extensão de arquivo)
+│
+├── hooks/                      Hooks compartilhados (parte da camada ViewModel)
+│   ├── use-color-scheme.ts        Lê o esquema de cores do dispositivo (light/dark)
+│   ├── use-color-scheme.web.ts    Variante para Web (resolução por extensão de arquivo)
+│   └── use-theme-color.ts         Resolve cor de acordo com tema + overrides
+│
+├── constants/
+│   └── theme.ts                 Paleta de cores e fontes do app (tokens de design)
+│
+├── assets/
+│   ├── fonts/                    Arquivos .ttf (Inter)
+│   └── images/                   Ícones do app, splash screen, imagens de exemplo
+│
+├── scripts/
+│   └── reset-project.js         Script utilitário: move o app de exemplo para
+│                                 "app-example/" e cria uma pasta "app/" em branco
+│                                 (comando: npm run reset-project)
+│
+├── app.json                     Configuração do Expo (nome, ícones, plugins, splash,
+│                                 orientação, features experimentais como typedRoutes)
+├── babel.config.js              Configuração do Babel (presets do Expo)
+├── metro.config.js              Configuração do bundler Metro (integração NativeWind)
+├── tailwind.config.js           Configuração do Tailwind/NativeWind
+├── global.css                   Diretivas do Tailwind importadas globalmente
+├── tsconfig.json                Configuração do TypeScript (paths, strict mode)
+├── eslint.config.js             Regras de lint (eslint-config-expo + prettier)
+├── package.json                 Dependências e scripts do projeto
+├── expo-env.d.ts / global.d.ts  Tipagens globais geradas pelo Expo
+├── AGENTS.md / CLAUDE.md         Instruções para agentes de IA (não é código do app)
+└── README.md                    Instruções padrão do template Expo
+
+------------------------------------------------------------------
+3. COMO O APP INICIALIZA (fluxo de arquivos)
+------------------------------------------------------------------
+
+1. `expo-router/entry` (definido em package.json -> "main") inicia o
+   Expo Router, que varre a pasta `app/` e monta as rotas.
+
+2. `app/_layout.tsx` é o layout raiz — todo o app passa por aqui:
+   - Carrega as fontes customizadas (Inter) com `useFonts`.
+   - Mantém a Splash Screen visível até fontes carregarem
+     (`SplashScreen.preventAutoHideAsync`).
+   - Cria o `QueryClient` do TanStack React Query e envolve toda a
+     árvore com `<QueryClientProvider>` — é aqui que qualquer chamada
+     de API feita via React Query passa a ter cache/estado global.
+   - Declara o `<Stack>` de navegação com duas rotas: o grupo
+     `(tabs)` (sem header) e `modal` (apresentação modal).
+
+3. `app/(tabs)/_layout.tsx` define a barra de abas (Home/Explore),
+   usando `Colors` de `constants/theme.ts` e o hook
+   `useColorScheme` para tema.
+
+4. `app/(tabs)/index.tsx` e `app/(tabs)/explore.tsx` são as telas
+   (View) renderizadas dentro de cada aba. Hoje são apenas conteúdo
+   de demonstração do Expo.
+
+5. `app/modal.tsx` é uma tela acessada via navegação por link
+   (`<Link href="/modal">`), aberta como modal.
+
+------------------------------------------------------------------
+4. TECNOLOGIAS INSTALADAS E PARA QUE SERVEM
+------------------------------------------------------------------
+
+- Expo 54 / Expo Router 6
+    Framework do app + roteamento por arquivos (cada arquivo em
+    app/ vira uma rota automaticamente).
+
+- TypeScript
+    Tipagem estática. `tsconfig.json` define alias de import "@/*"
+    apontando para a raiz do projeto (ex: `@/components/...`).
+
+- NativeWind + TailwindCSS
+    Permite estilizar componentes React Native com classes
+    utilitárias do Tailwind (equivalente ao Tailwind para web).
+
+- @tanstack/react-query
+    Gerencia estado assíncrono/servidor: cache de requisições,
+    revalidação, loading/error state. Em uma arquitetura MVVM,
+    os hooks que usam `useQuery`/`useMutation` SÃO a camada
+    ViewModel (expõem estado pronto para a View consumir).
+
+- axios
+    Cliente HTTP usado dentro dos "services" (camada Model) para
+    conversar com a API/backend.
+
+- react-hook-form + zod
+    react-hook-form controla o estado de formulários na View com
+    boa performance; zod valida os dados (schemas) — normalmente
+    usado tanto no Model (validar payloads) quanto no ViewModel
+    (validar antes de enviar).
+
+- react-native-reanimated / react-native-gesture-handler /
+  react-native-screens / react-native-safe-area-context
+    Dependências de baixo nível exigidas pela navegação e por
+    animações fluidas (usadas por baixo dos panos pelo Expo Router
+    e por bibliotecas de UI).
+
+- expo-font, expo-splash-screen, expo-status-bar, expo-system-ui,
+  expo-image, expo-constants, expo-haptics, expo-symbols,
+  expo-web-browser, expo-linking
+    Módulos nativos do Expo para fontes, splash, ícones de sistema
+    (SFSymbols), imagens otimizadas, feedback tátil, abrir links
+    externos, deep linking, etc.
+
+------------------------------------------------------------------
+5. MVVM: O QUE SIGNIFICA NESTE PROJETO
+------------------------------------------------------------------
+
+React Native / Expo não têm um "MVVM" embutido como o WPF ou o
+Android (Jetpack) têm — é uma convenção de organização que se
+implementa com hooks + componentes + services. O mapeamento que
+faz sentido aqui é:
+
+  MODEL (dados e regras)
+  -----------------------
+  - Tipos/entidades (interfaces TypeScript que representam os
+    dados do domínio, ex: `Aluno`, `Agendamento`, `Usuario`).
+  - Services: funções que usam `axios` para falar com a API
+    (ex: `agendamentoService.ts` com `listar()`, `criar()`).
+  - Schemas de validação `zod` (podem ficar no Model, pois
+    descrevem a forma dos dados).
+  - NÃO conhece React, nem componentes, nem hooks.
+
+  VIEWMODEL (estado + lógica de apresentação)
+  --------------------------------------------
+  - Hooks customizados (`useXxxViewModel` ou `useXxx`) que:
+      * chamam os Services do Model,
+      * usam `useQuery`/`useMutation` do React Query para cache,
+        loading e error state,
+      * expõem dados já formatados/prontos e funções de ação
+        (ex: `onSalvar`, `onExcluir`) para a View.
+  - Pode usar `react-hook-form` para orquestrar o estado de um
+    formulário e `zod` para validar antes de chamar o Model.
+  - NÃO contém JSX. Não sabe como algo é desenhado na tela.
+
+  VIEW (apresentação)
+  --------------------
+  - Telas dentro de `app/` (Expo Router) e componentes dentro de
+    `components/`.
+  - Consome o ViewModel via hook (`const vm = useAgendamentoViewModel()`)
+    e apenas renderiza o que o hook devolve (dados, loading, erro,
+    funções de callback para eventos de UI).
+  - Não faz fetch direto, não valida regra de negócio, não conhece
+    axios.
+
+Fluxo de dados típico:
+  View  --(chama função)-->  ViewModel  --(chama)-->  Model/Service
+  View  <--(estado/dados)--  ViewModel  <--(resposta)--  Model/Service
+
+------------------------------------------------------------------
+6. ESTRUTURA DE PASTAS RECOMENDADA (a ser criada)
+------------------------------------------------------------------
+
+O projeto ainda não tem pastas dedicadas a Model/ViewModel de
+negócio. Sugestão de estrutura, alinhada ao que já existe
+(`components/`, `hooks/`, `constants/`):
+
+projeto_secretaria/
+├── app/                     -> Views (rotas/telas) — já existe
+├── components/              -> Views (componentes de UI) — já existe
+├── hooks/                   -> ViewModels genéricos/tema — já existe
+│
+├── models/                  -> [NOVO] Camada Model
+│   ├── types/                  Interfaces/tipos de domínio (Aluno, Agendamento...)
+│   ├── schemas/                Schemas zod de validação
+│   └── services/               Chamadas HTTP com axios por recurso
+│       ├── api.ts                Instância axios configurada (baseURL, interceptors)
+│       └── agendamento.service.ts
+│
+├── viewmodels/              -> [NOVO] Camada ViewModel
+│   ├── use-agendamento.ts       Hook: useQuery/useMutation + regras de apresentação
+│   └── use-auth.ts
+│
+├── constants/               -> Tokens de design (cores, fontes) — já existe
+└── ...
+Cada feature de negócio (ex: "agendamentos", "clientes") deveria
+ter seu trio Model -> ViewModel -> View, mantendo a View o mais
+"burra" possível (apenas exibe o que o ViewModel manda).
+
+------------------------------------------------------------------
+7. RESUMO POR ARQUIVO-CHAVE ATUAL
+------------------------------------------------------------------
+
+app/_layout.tsx
+  Ponto de entrada visual do app. Registra fontes, splash screen e
+  o Provider global do React Query. Qualquer novo Provider global
+  (ex: contexto de autenticação) deve entrar aqui.
+
+app/(tabs)/_layout.tsx
+  Configuração das abas de navegação inferior (ícones, cores por
+  tema, feedback tátil ao tocar).
+
+app/(tabs)/index.tsx e explore.tsx
+  Telas de exemplo do template Expo — candidatas a serem
+  substituídas pelas telas reais do "projeto_secretaria".
+
+components/themed-text.tsx / themed-view.tsx
+  Wrappers de <Text>/<View> que aplicam cor conforme tema
+  claro/escuro automaticamente, usando `useThemeColor`.
+
+hooks/use-color-scheme.ts (+ variante .web.ts)
+  Devolve 'light' | 'dark' do sistema operacional. A variante
+  .web.ts existe porque a detecção de esquema de cor no React
+  Native Web precisa aguardar hidratação (evita mismatch de SSR).
+
+hooks/use-theme-color.ts
+  ViewModel simples de tema: dado um par claro/escuro e um nome de
+  cor, decide qual valor usar.
+
+constants/theme.ts
+  Fonte única da verdade para cores e fontes (design tokens).
+
+scripts/reset-project.js
+  Ferramenta de bootstrap do template Expo: ao rodar
+  `npm run reset-project`, move o conteúdo atual de `app/` para
+  `app-example/` e cria uma pasta `app/` vazia para começar do
+  zero. Útil quando for iniciar a implementação real do app.
+
+------------------------------------------------------------------
+8. OBSERVAÇÕES FINAIS
+------------------------------------------------------------------
+
+- O AGENTS.md do projeto instrui explicitamente a consultar a
+  documentação versionada do Expo 54
+  (https://docs.expo.dev/versions/v54.0.0/) antes de escrever
+  código, pois a API mudou entre versões do Expo.
+- As pastas `models/` e `viewmodels/` descritas na seção 6 ainda
+  não existem fisicamente no repositório — são a proposta de
+  organização MVVM para quando as funcionalidades reais do
+  "projeto_secretaria" começarem a ser implementadas.
+==================================================================
