@@ -13,7 +13,7 @@ export default function RootLayout() {
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="cadastro" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ header: Header }} />
-        <Stack.Screen name="posts/newPost" />
+        {/* <Stack.Screen name="posts/newPost" /> */}
       </Stack>
     </QueryClientProvider>
   );
