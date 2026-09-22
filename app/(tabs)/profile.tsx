@@ -5,7 +5,7 @@ const Profile = () => {
   return (
     <View className="flex-1 bg-white">
       {/* Bloco do avatar grande */}
-      <View className="bg-[#4a0e0e] items-center py-6">
+      <View className="bg-[#5A1A1A] items-center py-6">
         <View className="w-[76px] h-[76px] rounded-full bg-white/90 items-center justify-center mb-3">
           <Ionicons name="person" size={38} color="#7a1414" />
         </View>
