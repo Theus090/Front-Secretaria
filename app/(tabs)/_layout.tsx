@@ -13,7 +13,7 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="details"
+        name="adicionar"
         options={{
           title: "Adicionar",
           tabBarIcon: ({ color }) => (

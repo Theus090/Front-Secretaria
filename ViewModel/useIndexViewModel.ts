@@ -48,7 +48,7 @@ export default function useIndexViewModel() {
   const signinUser = useMutation<number, AxiosError, SigninSchema>({
     mutationFn: ({ email, password }: SigninSchema) =>
       Signin({ email, password }),
-    onSuccess: () => {
+    onSuccess: async () => {
       router.navigate("/(tabs)");
     },
     onError: (error) => {
