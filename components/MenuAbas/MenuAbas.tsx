@@ -7,19 +7,17 @@ const MenuAbas = () => {
   const abas = ["Professor", "Inspetor", "Direção"];
 
   return (
-    <View className="h-10 flex-row bg-[#a5090b]">
+    <View className="h-10 flex-row bg-[#A5090B]">
       {abas.map((aba) => (
         <Pressable
           key={aba}
           onPress={() => setAbaSelecionada(aba)}
           className={`flex-1 items-center justify-center ${
-            abaSelecionada === aba ? "bg-[#f5e5e5]" : ""
+            abaSelecionada === aba ? "bg-[#F5E5E5]" : ""
           }`}
         >
           <Text
-            className={`text-sm ${
-              abaSelecionada === aba ? "text-[#8b1719]" : "text-white"
-            }`}
+            className={abaSelecionada === aba ? "text-[#8B1719]" : "text-white"}
           >
             {aba}
           </Text>

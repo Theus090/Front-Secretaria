@@ -38,7 +38,7 @@ const Home = () => {
   return (
     <View className="flex-1">
       {carregando ? (
-        <ActivityIndicator className="flex-1" size="large" />
+        <ActivityIndicator className="flex-1  bg-white" size="large" />
       ) : (
         <FlatList
           data={tasks}

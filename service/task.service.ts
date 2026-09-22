@@ -8,7 +8,7 @@ type ListTasksResponse = {
 export async function ListTasks(): Promise<Task[]> {
   const { data } = await api.get<ListTasksResponse>("/api/tasks/listTask");
 
-  console.log("Tasks recebidas:", data);
+  //   console.log("Tasks recebidas:", data);
 
   return data.data;
 }

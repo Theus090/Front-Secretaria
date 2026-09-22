@@ -7,7 +7,7 @@ type CartaoDeTaskProps = {
 
 const CartaoDeTask = ({ task }: CartaoDeTaskProps) => {
   return (
-    <View className="rounded-xl bg-white p-4">
+    <View className="rounded-xl bg-white p-4 border border-gray-200">
       <Text className="text-xl font-bold text-black">{task.descricao}</Text>
 
       <Text className="text-base text-gray-600">

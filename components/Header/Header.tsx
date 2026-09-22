@@ -24,12 +24,8 @@ const Header = (props: NativeStackHeaderProps) => {
             resizeMode="contain"
           />
         )}
-        <Image
-          className="absolute right-4 h-12 w-12 rounded-full"
-          source={require("@/assets/images/user.png")}
-          resizeMode="cover"
-        />
       </SafeAreaView>
+
       <MenuAbas />
     </View>
   );

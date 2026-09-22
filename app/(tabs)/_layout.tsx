@@ -1,6 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-
 export default function TabsLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue", headerShown: false }}>
@@ -16,9 +15,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="details"
         options={{
-          title: "Detalhes",
+          title: "Adicionar",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="info" color={color} />
+            <FontAwesome size={28} name="plus-circle" color={color} />
           ),
         }}
       />
