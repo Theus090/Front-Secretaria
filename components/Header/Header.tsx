@@ -44,7 +44,7 @@ const Header = (props: NativeStackHeaderProps) => {
           className="rounded-full w-12 h-12 items-center justify-center"
           hitSlop={10}
         >
-          <Ionicons name="log-out-outline" size={26} color="#b40608" />
+          <Ionicons name="log-out-outline" size={30} color="#FFFFFF" />
         </Pressable>
       </SafeAreaView>
 

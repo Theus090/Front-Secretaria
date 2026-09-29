@@ -63,7 +63,7 @@ const Details = () => {
   return (
     <View className="flex-1 justify-center items-center">
       <View>
-        <Text>Crie uma nova postagem</Text>
+        <Text>Crie uma novo serviço</Text>
       </View>
       <View>
         <CampoDeTexto
