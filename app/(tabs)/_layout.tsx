@@ -22,6 +22,15 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="contagem"
+        options={{
+          title: "contagem",
+          tabBarIcon: ({ color }) => (
+            <FontAwesome size={28} name="users" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: "Perfil",
