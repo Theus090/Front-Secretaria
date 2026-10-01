@@ -1,28 +1,25 @@
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import { FlatList } from "react-native-reanimated/lib/typescript/Animated";
+import AbaComponent from "../AbaComponent/AbaComponent";
 
-const MenuAbas = () => {
-  const [abaSelecionada, setAbaSelecionada] = useState("Professor");
+export type AbaProps = {
+  cargo: string;
+};
 
-  const abas = ["Professor", "Inspetor", "Direção"];
-
+type MenuAbaProps = {
+  abas: AbaProps[];
+};
+const MenuAbas = ({ abas }: MenuAbaProps) => {
   return (
     <View className="h-10 flex-row bg-[#A5090B]">
-      {abas.map((aba) => (
-        <Pressable
-          key={aba}
-          onPress={() => setAbaSelecionada(aba)}
-          className={`flex-1 items-center justify-center ${
-            abaSelecionada === aba ? "bg-[#F5E5E5]" : ""
-          }`}
-        >
-          <Text
-            className={abaSelecionada === aba ? "text-[#8B1719]" : "text-white"}
-          >
-            {aba}
-          </Text>
-        </Pressable>
-      ))}
+      <FlatList
+        data={abas}
+        horizontal
+        keyExtractor={(aba) => aba.cargo}
+        renderItem={({ item }) => <AbaComponent cargo={item.cargo} />}
+
+      />
     </View>
   );
 };
