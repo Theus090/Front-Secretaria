@@ -2,34 +2,45 @@ import { View, Text, Pressable } from "react-native";
 import { useState } from "react";
 import { Contagem } from "../../types/contagem";
 import { Sala } from "../../types/sala";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 type CardContagemProps = {
-  contagem: Contagem;
   sala: Sala;
 };
 
-const CardContagem = ({ contagem, sala }: CardContagemProps) => {
+const CardContagem = ({ sala }: CardContagemProps) => {
   const [numero, setNumero] = useState(0);
+  const [status, setStatus] = useState("Pendente");
 
   return (
-    <View>
-      <View>
-        <Text>{sala.nome}º ano A</Text>
-        <Text>Pendente</Text>
+    <View className="flex items-center justify-center border rounded-lg">
+      <View className="flex flex-row gap-10">
+        <Text>{sala.nome}</Text>
+        <Text className="text-red-500">Pendente</Text>
       </View>
 
-      <View>
+      <View className="flex-1">
         <Text>Previsão: {sala.quantidade}</Text>
       </View>
 
-      <View>
-        <View>
-          <Pressable onPress={() => setNumero(numero + 1)}>+</Pressable>
+      <View className="flex flex-row">
+        <View className="flex flex-row gap-30">
+          <Pressable onPress={() => setNumero(numero + 1)}>
+            <Text>+</Text>
+          </Pressable>
           <Text>{numero}</Text>
-          <Pressable onPress={() => setNumero(numero - 1)}>-</Pressable>
+          <Pressable onPress={() => setNumero(numero - 1)}>
+            <Text>-</Text>
+          </Pressable>
         </View>
         <View>
-          <Pressable></Pressable>
+          <Pressable
+            onPress={() => {
+              setStatus("concluido");
+            }}
+          >
+            <AntDesign name="send" size={24} color="black" />
+          </Pressable>
         </View>
       </View>
     </View>
