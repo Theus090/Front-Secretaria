@@ -5,10 +5,8 @@ type ListTasksResponse = {
   data: Task[];
 };
 
-export async function ListTasks(): Promise<Task[]> {
-  const { data } = await api.get<ListTasksResponse>("/api/tasks/listTask");
-
-  //   console.log("Tasks recebidas:", data);
+export async function ListTasksByRole(cargo: string): Promise<Task[]> {
+  const { data } = await api.get<ListTasksResponse>(`/api/tasks/listTaskRole/${cargo}`);
 
   return data.data;
 }

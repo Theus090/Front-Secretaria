@@ -1,28 +1,49 @@
-import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Dispatch, SetStateAction } from "react";
+import { FlatList, RefreshControl, Text, View } from "react-native";
+import AbaComponent from "../AbaComponent/AbaComponent";
 
-const MenuAbas = () => {
-  const [abaSelecionada, setAbaSelecionada] = useState("Professor");
+export type AbaProps = {
+  cargo: string;
+};
 
-  const abas = ["Professor", "Inspetor", "Direção"];
+type MenuAbaProps = {
+  abas: AbaProps[];
+  isRefreshing: boolean;
+  aoAtualizar: () => {};
+  cargoAtual: string;
+  selecionarCargo: Dispatch<SetStateAction<string>>;
+};
 
+const MenuAbas = ({
+  abas,
+  isRefreshing,
+  aoAtualizar,
+  selecionarCargo,
+  cargoAtual,
+}: MenuAbaProps) => {
   return (
-    <View className="h-10 flex-row bg-[#A5090B]">
-      {abas.map((aba) => (
-        <Pressable
-          key={aba}
-          onPress={() => setAbaSelecionada(aba)}
-          className={`flex-1 items-center justify-center ${
-            abaSelecionada === aba ? "bg-[#F5E5E5]" : ""
-          }`}
-        >
-          <Text
-            className={abaSelecionada === aba ? "text-[#8B1719]" : "text-white"}
-          >
-            {aba}
+    <View className="h-10 flex-row bg-[#A5090B] px-4">
+      <FlatList
+        data={abas}
+        horizontal
+        contentContainerStyle={{ padding: 4, gap: 14 }}
+        keyExtractor={(aba) => aba.cargo}
+        renderItem={({ item }) => (
+          <AbaComponent
+            selecionarCargo={selecionarCargo}
+            cargoAtual={cargoAtual}
+            cargo={item.cargo}
+          />
+        )}
+        refreshControl={
+          <RefreshControl refreshing={isRefreshing} onRefresh={aoAtualizar} />
+        }
+        ListEmptyComponent={
+          <Text className="mt-10 text-center text-gray-400">
+            Nenhuma sala encontrada
           </Text>
-        </Pressable>
-      ))}
+        }
+      />
     </View>
   );
 };
