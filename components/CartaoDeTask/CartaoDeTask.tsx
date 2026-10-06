@@ -6,9 +6,31 @@ type CartaoDeTaskProps = {
 };
 
 const CartaoDeTask = ({ task }: CartaoDeTaskProps) => {
+  const corUrgencia = () => {
+    switch (task.urgencia) {
+      case "normal":
+        return "bg-green-500";
+
+      case "Nao-urgente":
+        return "bg-yellow-500";
+
+      case "Urgente":
+        return "bg-red-500";
+
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   return (
     <View className="rounded-xl bg-white p-4 border border-gray-200">
-      <Text className="text-xl font-bold text-black">{task.descricao}</Text>
+      <View className="flex-row items-center justify-between">
+        <Text className="text-xl font-bold text-black">{task.descricao}</Text>
+
+        <View className={`rounded-full px-3 py-1 ${corUrgencia()}`}>
+          <Text className="text-sm font-bold text-white">{task.urgencia}</Text>
+        </View>
+      </View>
 
       <Text className="text-base text-gray-600">
         Setor: {task.setor_responsavel}
