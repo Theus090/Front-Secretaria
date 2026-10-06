@@ -1,20 +1,15 @@
-
-import Botao from "../components/botao/botao";
 import CampoTextHookForm from "@/components/CampoTextoHookForm/CampoTextoHookForm";
 import useCadastroViewModel from "@/ViewModel/useCadastroViewModel";
+import { Picker } from "@react-native-picker/picker";
 import { useHeaderHeight } from "expo-router/react-navigation";
 import { Controller } from "react-hook-form";
-import { Picker } from "@react-native-picker/picker";
-import { ImageBackground } from "react-native";
-import React from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
+  ImageBackground, KeyboardAvoidingView, ScrollView,
   Text,
-  View,
+  View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Botao from "../components/botao/botao";
 
 const Cadastro = () => {
   const { control, handleSubmit, onSubmit, errors, isPending } =
@@ -27,32 +22,32 @@ const Cadastro = () => {
       source={require("../assets/images/image.png")}
       style={{ flex: 1 }}
     >
-    <SafeAreaView className="flex-1 items-center">
-      <KeyboardAvoidingView
-        className="flex-1 w-full items-center"
-        behavior="padding"
-        keyboardVerticalOffset={headerHeight}
-      >
-        <ScrollView
-          className="w-full"
-          contentContainerClassName="items-center pb-8"
-          keyboardShouldPersistTaps="handled"
+      <SafeAreaView className="flex-1 items-center">
+        <KeyboardAvoidingView
+          className="flex-1 w-full items-center"
+          behavior="padding"
+          keyboardVerticalOffset={headerHeight}
         >
-          <View className="gap-6  mt-28">
-          <Text className="text-2xl ">Criar conta</Text>
-            <CampoTextHookForm
-              label="Nome"
-              name="name"
-              control={control}
-              errorMessage={errors.name?.message}
-            />
-            <CampoTextHookForm
-              label="E-mail"
-              name="email"
-              control={control}
-              errorMessage={errors.email?.message}
-            />
-             <Controller
+          <ScrollView
+            className="w-full"
+            contentContainerClassName="items-center pb-8"
+            keyboardShouldPersistTaps="handled"
+          >
+            <View className="gap-6  mt-28">
+              <Text className="text-2xl ">Criar conta</Text>
+              <CampoTextHookForm
+                label="Nome"
+                name="name"
+                control={control}
+                errorMessage={errors.name?.message}
+              />
+              <CampoTextHookForm
+                label="E-mail"
+                name="email"
+                control={control}
+                errorMessage={errors.email?.message}
+              />
+              <Controller
                 control={control}
                 name="role"
                 render={({ field: { onChange, value } }) => (
@@ -64,9 +59,10 @@ const Cadastro = () => {
                         selectedValue={value}
                         onValueChange={(itemValue) => onChange(itemValue)}
                       >
-                        <Picker.Item label="Selecione um cargo" value="select" />
-
-                        <Picker.Item label="Direção" value="direction" />
+                        <Picker.Item
+                          label="Selecione um cargo"
+                          value="select"
+                        />
 
                         <Picker.Item label="Professor" value="teacher" />
 
@@ -93,28 +89,27 @@ const Cadastro = () => {
                 errorMessage={errors.nif?.message}
               />
 
-            <CampoTextHookForm
-              label="Senha"
-              name="password"
-              control={control}
-              errorMessage={errors.password?.message}
-            />
-            <View className="flex-row justify-center">
-              <Botao
-                className="w-20"
-                children={
-                  <View className="justify-center items-center">
-                    <Text className="text-white text-xl">Criar</Text>
-                  </View>
-                }
-
-                onPress={handleSubmit(onSubmit)}
+              <CampoTextHookForm
+                label="Senha"
+                name="password"
+                control={control}
+                errorMessage={errors.password?.message}
               />
+              <View className="flex-row justify-center">
+                <Botao
+                  className="w-20"
+                  children={
+                    <View className="justify-center items-center">
+                      <Text className="text-white text-xl">Criar</Text>
+                    </View>
+                  }
+                  onPress={handleSubmit(onSubmit)}
+                />
+              </View>
             </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </ImageBackground>
   );
 };
