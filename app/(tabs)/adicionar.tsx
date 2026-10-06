@@ -1,5 +1,4 @@
 import CampoDeTexto from "@/components/CampoDeTexto/CampoDeTexto";
-import SeletorDeImagem from "@/components/SeletorDeImagem/SeletorDeImagem";
 import api from "@/lib/axios.config";
 import { obterUserId } from "@/lib/secureStore";
 import * as ImagePicker from "expo-image-picker";
@@ -63,11 +62,11 @@ const Details = () => {
   return (
     <View className="flex-1 justify-center items-center">
       <View>
-        <Text>Crie uma novo serviço</Text>
+        <Text className="font-semibold text-2xl">Crie uma novo serviço</Text>
       </View>
       <View>
         <CampoDeTexto
-          label="Titulo"
+          label="Data criação"
           value={titulo}
           isError={isTituloError}
           setValue={setTitulo}
@@ -75,7 +74,7 @@ const Details = () => {
           placeholder="De um titulo para a postagem"
         />
         <CampoDeTexto
-          label="Texto"
+          label="Prazo estipulado"
           value={texto}
           isError={isTextoError}
           setValue={setTexto}
@@ -84,14 +83,43 @@ const Details = () => {
           multiline={true}
           numberOfLines={10}
           textAlignVertical="top"
-          textInputClassName="h-60"
+          textInputClassName="h-16"
         />
-        <SeletorDeImagem
-          label="Imagem"
-          value={imagem}
-          setValue={setImagem}
-          isError={isImagemError}
-          errorMessage="Selecione uma imagem"
+        <CampoDeTexto
+          label="Setor responsavel"
+          value={texto}
+          isError={isTextoError}
+          setValue={setTexto}
+          errorMessage="Titulo inválido"
+          placeholder="Texto da postagem"
+          multiline={true}
+          numberOfLines={10}
+          textAlignVertical="top"
+          textInputClassName="h-16"
+        />
+        <CampoDeTexto
+          label="Descrição"
+          value={texto}
+          isError={isTextoError}
+          setValue={setTexto}
+          errorMessage="Titulo inválido"
+          placeholder="Texto da postagem"
+          multiline={true}
+          numberOfLines={10}
+          textAlignVertical="top"
+          textInputClassName="h-16"
+        />
+        <CampoDeTexto
+          label="Urgência"
+          value={texto}
+          isError={isTextoError}
+          setValue={setTexto}
+          errorMessage="Titulo inválido"
+          placeholder="Texto da postagem"
+          multiline={true}
+          numberOfLines={10}
+          textAlignVertical="top"
+          textInputClassName="h-16"
         />
       </View>
       <Botao className="mt-4" onPress={criarPostagem} disabled={enviando}>

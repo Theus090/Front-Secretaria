@@ -3,6 +3,7 @@ import { salvarCargoUsuario, salvarUserId } from "@/lib/secureStore";
 import { isAxiosError } from "axios";
 import { SigninSchema } from "../schemas/signin.schema";
 import { SignUpType } from "../schemas/signup.schema";
+import { PerfilUsuario } from "../types/usuario";
 
 type UserLogin = {
   id_usuario: string;
@@ -59,4 +60,18 @@ export async function CreateAccount({
     password,
   });
   return status;
+}
+
+export async function BuscarUsuario(id: string): Promise<PerfilUsuario> {
+  const { data } = await api.get<ApiResponse>(`/api/users/${id}`);
+  console.log("Resposta do usuário:", JSON.stringify(data));
+
+  const u = data.data as PerfilUsuario;
+
+  return {
+    nome: u.nome,
+    email: u.email,
+    cargo: u.cargo,
+    nif: u.nif,
+  };
 }
