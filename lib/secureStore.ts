@@ -15,14 +15,14 @@ export async function salvarCargoUsuario(cargo: string) {
   await SecureStore.setItemAsync(USER_ROLE, cargo);
 }
 
-export async function obterCargo(cargo: string) {
-  if (Platform.OS === "web") return;
-  await SecureStore.setItemAsync(USER_ROLE, cargo);
+export async function obterCargo() {
+  if (Platform.OS === "web") return null;
+  return SecureStore.getItemAsync(USER_ROLE);
 }
 
-export async function removerCargoCargo(cargo: string) {
+export async function removerCargo() {
   if (Platform.OS === "web") return;
-  await SecureStore.setItemAsync(USER_ROLE, cargo);
+  await SecureStore.deleteItemAsync(USER_ROLE);
 }
 
 export async function obterUserId() {
