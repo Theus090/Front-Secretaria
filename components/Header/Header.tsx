@@ -22,22 +22,11 @@ const Header = (props: NativeStackHeaderProps) => {
   return (
     <View>
       <SafeAreaView className="pt-8 h-28 px-4 bg-[#b40608] flex-row items-center justify-between">
-        {/* LOGO DO SESI */}
-        {podeVoltar ? (
-          <Pressable onPress={() => props.navigation.goBack()}>
-            <Image
-              className="h-12 w-32"
-              source={require("@/assets/images/header_logo.png")}
-              resizeMode="contain"
-            />
-          </Pressable>
-        ) : (
-          <Image
-            className="h-12 w-32"
-            source={require("@/assets/images/header_logo.png")}
-            resizeMode="contain"
-          />
-        )}
+        <Image
+          className="h-12 w-32"
+          source={require("@/assets/images/header_logo.png")}
+          resizeMode="contain"
+        />
 
         <Pressable
           onPress={handleLogout}
