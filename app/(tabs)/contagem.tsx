@@ -16,9 +16,6 @@ const Contagem = () => {
     isLoading,
     isRefreshing,
     aoAtualizar,
-    onSubmit,
-    handleSubmit,
-    control,
   } = useContagemViewModel();
 
   return (
@@ -39,7 +36,7 @@ const Contagem = () => {
             data={salas}
             keyExtractor={(item) => String(item.id_sala)}
             contentContainerStyle={{ padding: 16, gap: 16 }}
-            renderItem={({ item }) => <CardContagem control={control} name="count" sala={item} onSubmit={onSubmit} handleSubmit={handleSubmit} />}
+            renderItem={({ item }) => <CardContagem  name="count" sala={item}  />}
             refreshControl={
               <RefreshControl
                 refreshing={isRefreshing}

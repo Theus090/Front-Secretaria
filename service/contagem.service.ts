@@ -19,11 +19,13 @@ export async function CreateCount({
   classroom,
   user,
 }: countType): Promise<number> {
+
+  console.log({count, status, classroom, user})
   const resposta = await api.post("/api/count/", {
-    count,
+    count: Number(count),
     status,
-    classroom,
-    user
+    classroom : classroom.toString(),
+    user,
   });
 
   return resposta.status;

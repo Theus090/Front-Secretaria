@@ -4,31 +4,37 @@ import { Contagem } from "../../types/contagem";
 import { Sala } from "../../types/sala";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import CampoTextHookForm from "../CampoTextoHookForm/CampoTextoHookForm";
-import { Control, FieldValues, Path, SubmitHandler, UseFormHandleSubmit } from "react-hook-form";
-import { CountSubmit } from "@/ViewModel/useContagemViewModel";
+import {
+  Control,
+  FieldValues,
+  Path,
+  SubmitHandler,
+  UseFormHandleSubmit,
+} from "react-hook-form";
+import { CountForm, CountSubmit } from "@/ViewModel/useContagemViewModel";
+import useCountViewModel from "@/ViewModel/useCountViewModel";
 
-type CardContagemProps<T extends FieldValues> = {
+type CardContagemProps = {
   sala: Sala;
-  name: Path<T>;
-  control: Control<T>;
-  onSubmit: SubmitHandler<CountSubmit>
-  handleSubmit: UseFormHandleSubmit<CountSubmit>
+  name: Path<CountForm>;
 };
 
-const CardContagem = <T extends FieldValues>({
-  sala,
-  control,
-  name,
-  handleSubmit, onSubmit
-}: CardContagemProps<T>) => {
-  const [numero, setNumero] = useState(0);
-  const [status, setStatus] = useState("Pendente");
+const CardContagem = ({ sala, name }: CardContagemProps) => {
+  const [status, setStatus] = useState();
+
+  const { onSubmit, handleSubmit, control } = useCountViewModel();
 
   return (
-    <View className="flex items-center justify-around border rounded-lg h-40">
+    <View className="flex items-center justify-around border rounded-lg h-40 p-40">
       <View className="flex flex-row gap-10">
         <Text>{sala.nome}</Text>
-        <Text className="text-red-500">Pendente</Text>
+        {status === "Pendente" ? (
+          <Text className="text-red-500">{status}</Text>
+        ) : status === "Concluido" ? (
+          <Text className="text-green-500">{status}</Text>
+        ) : (
+          <Text className="text-gray-500">{status || "Sem status"}</Text>
+        )}
       </View>
 
       <View className="flex">
@@ -46,7 +52,10 @@ const CardContagem = <T extends FieldValues>({
         </View>
         <View>
           <Pressable
-            onPress={handleSubmit(onSubmit)}
+            onPress={handleSubmit(({ count }) => {
+
+              onSubmit({ count, id_sala: sala.id_sala });
+            })}
           >
             <AntDesign name="send" size={24} color="black" />
           </Pressable>
