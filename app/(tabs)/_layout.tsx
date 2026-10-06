@@ -1,5 +1,7 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { Text } from "react-native";
 export default function TabsLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: "blue", headerShown: false }}>
@@ -24,7 +26,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="contagem"
         options={{
-          title: "contagem",
+          title: "Contagem",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="users" color={color} />
           ),
@@ -36,6 +38,15 @@ export default function TabsLayout() {
           title: "Perfil",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="user" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="configsDirec"
+        options={{
+          title: "Gerenciamento",
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="setting" size={24} color={color} />
           ),
         }}
       />
