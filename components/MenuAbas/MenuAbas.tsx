@@ -22,11 +22,14 @@ const MenuAbas = ({
   cargoAtual,
 }: MenuAbaProps) => {
   return (
-    <View className="h-10 flex-row bg-[#A5090B] px-4">
+    <View className="h-8 flex-row bg-[#A5090B]">
       <FlatList
         data={abas}
         horizontal
-        contentContainerStyle={{ padding: 4, gap: 14 }}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: 4,
+        }}
         keyExtractor={(aba) => aba.cargo}
         renderItem={({ item }) => (
           <AbaComponent
