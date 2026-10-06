@@ -6,4 +6,5 @@ export type Task = {
   prazo_estipulado: string;
   setor_responsavel: string;
   status_req: number;
+  urgencia: "normal" | "Nao-urgente" | "Urgente";
 };
