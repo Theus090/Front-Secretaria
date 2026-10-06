@@ -10,8 +10,10 @@ const CartaoDeTask = ({ task }: CartaoDeTaskProps) => {
     switch (task.urgencia) {
       case "normal":
         return "bg-green-500";
+      case "Normal":
+        return "bg-green-500";
 
-      case "Nao-urgente":
+      case "Nao-Urgente":
         return "bg-yellow-500";
 
       case "Urgente":
@@ -21,6 +23,21 @@ const CartaoDeTask = ({ task }: CartaoDeTaskProps) => {
         return "bg-gray-500";
     }
   };
+  const formatarUrgencia = (urgencia: Task["urgencia"]) => {
+    switch (urgencia) {
+      case "Nao-Urgente":
+        return "Não urgente";
+
+      case "Urgente":
+        return "Urgente";
+
+      case "normal":
+        return "Normal";
+
+      default:
+        return urgencia;
+    }
+  };
 
   return (
     <View className="rounded-xl bg-white p-4 border border-gray-200">
@@ -28,7 +45,10 @@ const CartaoDeTask = ({ task }: CartaoDeTaskProps) => {
         <Text className="text-xl font-bold text-black">{task.descricao}</Text>
 
         <View className={`rounded-full px-3 py-1 ${corUrgencia()}`}>
-          <Text className="text-sm font-bold text-white">{task.urgencia}</Text>
+          <Text className="text-sm font-bold text-white">
+            {" "}
+            {formatarUrgencia(task.urgencia)}
+          </Text>
         </View>
       </View>
 
