@@ -22,7 +22,7 @@ const AbaComponent = ({
   return (
     <Pressable onPress={() => selecionarCargo(cargo)}>
       <View className={`${cargo == cargoAtual ? "bg-white" : ""}`}>
-        <Text>{TranslateRoleLabel(cargo)}</Text>
+        <Text className="">{TranslateRoleLabel(cargo)}</Text>
       </View>
     </Pressable>
   );
