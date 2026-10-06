@@ -1,7 +1,14 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ListSalas } from "@/service/contagem.service";
 import { useQuery } from "@tanstack/react-query";
 
+export type CountForm = {
+  count: number;
+};
+
+export type CountSubmit = CountForm & {
+  id_sala: string;
+};
 export default function useContagemViewModel() {
   const data = new Date();
 
@@ -26,6 +33,6 @@ export default function useContagemViewModel() {
     isLoading: fetchCounts.isLoading,
     isRefreshing: fetchCounts.isRefetching,
     aoAtualizar,
-    dataFormatada
+    dataFormatada,
   };
 }

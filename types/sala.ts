@@ -1,5 +1,5 @@
 export type Sala = {
-  id_sala: number;
+  id_sala: string;
   nome: string;
   quantidade: number;
 };

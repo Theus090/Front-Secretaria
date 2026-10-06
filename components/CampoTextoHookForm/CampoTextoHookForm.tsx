@@ -67,7 +67,7 @@ const CampoTextHookForm = <T extends FieldValues>({
           returnKeyType={returnKeyType}
           style={{ includeFontPadding: false }}
           className={cn(
-            "bg-[#F8FAFC] px-4 w-72 text-lg rounded-xl border border-[#E2E8F0] h-16 text-black font-sans",
+            "bg-[#F8FAFC] px-4 text-lg rounded-xl border border-[#E2E8F0] h-16 text-black font-sans",
             textInputClassName
           )}
         />
