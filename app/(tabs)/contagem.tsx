@@ -1,20 +1,29 @@
 import {
-    ActivityIndicator,
-    FlatList,
-    RefreshControl,
-    Text,
-    View,
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  Text,
+  View,
 } from "react-native";
 import CardContagem from "@/components/CardContagem/CardContagem";
 import useContagemViewModel from "@/ViewModel/useContagemViewModel";
 
 const Contagem = () => {
-
-    const {salas, dataFormatada, isError, isLoading, isRefreshing, aoAtualizar} = useContagemViewModel()
+  const {
+    salas,
+    dataFormatada,
+    isError,
+    isLoading,
+    isRefreshing,
+    aoAtualizar,
+    onSubmit,
+    handleSubmit,
+    control,
+  } = useContagemViewModel();
 
   return (
     <View>
-      <View className="flex items-baseline justify-center h-300 bg-[#4a0e0e] shadow-lg">
+      <View className="flex items-start justify-around h-40 bg-[#4a0e0e] p-20 text-3xl">
         <Text className="text-white">Contagem do Lanche</Text>
         <Text className="text-white">{dataFormatada}</Text>
         <View className="flex flex-row gap-3">
@@ -30,7 +39,7 @@ const Contagem = () => {
             data={salas}
             keyExtractor={(item) => String(item.id_sala)}
             contentContainerStyle={{ padding: 16, gap: 16 }}
-            renderItem={({ item }) => <CardContagem sala={item} />}
+            renderItem={({ item }) => <CardContagem control={control} name="count" sala={item} onSubmit={onSubmit} handleSubmit={handleSubmit} />}
             refreshControl={
               <RefreshControl
                 refreshing={isRefreshing}
