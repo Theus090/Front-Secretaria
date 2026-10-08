@@ -1,5 +1,4 @@
-
-import z from "zod";
+import z from "@/node_modules/zod/v4/classic/external.cjs";
 
 enum Cargo {
   direction = "direction",
@@ -7,7 +6,7 @@ enum Cargo {
   inspector = "inspector",
   coordination = "coordination",
   kitchen = "kitchen",
-  selecionar = "select"
+  selecionar = "select",
 }
 
 export const signUpBase = z.object({
@@ -23,12 +22,18 @@ export const signUpBase = z.object({
     .regex(/[A-Z]/, "Deve ter letra maiuscula")
     .regex(/\d/, "Deve ter um numero")
     .regex(/[\W_]/, "Deve ter um caractere especial"),
-  role: z.enum(['direction','teacher','inspector','coordination','kitchen', 'select']),
+  role: z.enum([
+    "direction",
+    "teacher",
+    "inspector",
+    "coordination",
+    "kitchen",
+    "select",
+  ]),
   nif: z
-  .string()
-  .regex(/^[A-Za-z]{2}\d{7}$/, "Deve conter duas letras e 7 numeros").length(9)
+    .string()
+    .regex(/^[A-Za-z]{2}\d{7}$/, "Deve conter duas letras e 7 numeros")
+    .length(9),
 });
-
-
 
 export type SignUpType = z.infer<typeof signUpBase>;
