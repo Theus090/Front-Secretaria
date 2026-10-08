@@ -6,8 +6,7 @@ enum Cargo {
   teacher = "teacher",
   inspector = "inspector",
   coordination = "coordination",
-  kitchen = "kitchen",
-  selecionar = "select"
+  kitchen = "kitchen"
 }
 
 export const signUpBase = z.object({
