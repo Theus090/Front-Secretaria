@@ -5,9 +5,9 @@ import { Link } from "expo-router";
 import { useHeaderHeight } from "expo-router/react-navigation";
 import {
   ImageBackground,
-  Text,
-  ScrollView,
   KeyboardAvoidingView,
+  ScrollView,
+  Text,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,46 +34,48 @@ const App = () => {
             contentContainerClassName="items-center pb-8"
             keyboardShouldPersistTaps="handled"
           >
-            <View className="gap-6  mt-28">
-            <View className="p-6 flex justify-center items-center h-full rounded-2xl">
-              <View className="mb-8 items-center">
-                <Text className="font-sans text-black text-2xl">Login</Text>
+            <View className="gap-6  mt-36">
+              <View className="p-6 flex justify-center items-center h-full rounded-2xl">
+                <View className="mb-8 items-center">
+                  <Text className="font-sans text-black text-2xl">Login</Text>
 
-                <Text>Faça o login para continuar</Text>
+                  <Text>Faça o login para continuar</Text>
+                </View>
+
+                <View className="w-72 gap-6">
+                  <CampoTextHookForm
+                    label="E-mail"
+                    name="email"
+                    placeholder="E-mail"
+                    control={control}
+                  />
+
+                  <CampoTextHookForm
+                    label="Senha"
+                    name="password"
+                    placeholder="Senha"
+                    control={control}
+                  />
+                </View>
+
+                <View className="items-center mt-8">
+                  <Botao
+                    className="w-20"
+                    children={
+                      <View className="justify-center items-center">
+                        <Text className="text-white text-xl">Entrar</Text>
+                      </View>
+                    }
+                    onPress={handleSubmit(onSubmit)}
+                  />
+                </View>
+
+                <View className="mt-2">
+                  <Link href={"/cadastro"}>
+                    <Text>Cadastre-se</Text>
+                  </Link>
+                </View>
               </View>
-
-              <View className="gap-6">
-                <CampoTextHookForm
-                  label="E-mail"
-                  name="email"
-                  control={control}
-                />
-
-                <CampoTextHookForm
-                  label="Senha"
-                  name="password"
-                  control={control}
-                />
-              </View>
-
-              <View className="items-center mt-8">
-                <Botao
-                  className="w-20"
-                  children={
-                    <View className="justify-center items-center">
-                      <Text className="text-white text-xl">Entrar</Text>
-                    </View>
-                  }
-                  onPress={handleSubmit(onSubmit)}
-                />
-              </View>
-
-              <View className="mt-2">
-                <Link href={"/cadastro"}>
-                  <Text>Cadastre-se</Text>
-                </Link>
-              </View>
-            </View>
             </View>
           </ScrollView>
         </KeyboardAvoidingView>

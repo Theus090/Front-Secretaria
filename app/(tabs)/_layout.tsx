@@ -4,7 +4,9 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { Text } from "react-native";
 export default function TabsLayout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: "blue", headerShown: false }}>
+    <Tabs
+      screenOptions={{ tabBarActiveTintColor: "#B40608", headerShown: false }}
+    >
       <Tabs.Screen
         name="index"
         options={{
