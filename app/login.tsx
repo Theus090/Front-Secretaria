@@ -34,7 +34,7 @@ const App = () => {
             contentContainerClassName="items-center pb-8"
             keyboardShouldPersistTaps="handled"
           >
-            <View className="gap-6  mt-28">
+            <View className="gap-6  mt-36">
               <View className="p-6 flex justify-center items-center h-full rounded-2xl">
                 <View className="mb-8 items-center">
                   <Text className="font-sans text-black text-2xl">Login</Text>
