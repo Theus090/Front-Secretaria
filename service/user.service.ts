@@ -45,6 +45,28 @@ export async function BasicSignin(email: string, password: string) {
   }
 }
 
+// export async function CreateAccount({
+//   name,
+//   email,
+//   role,
+//   nif,
+//   password,
+// }: SignUpType): Promise<number> {
+//   const body = {
+//     name,
+//     email,
+//     role,
+//     nif,
+//     password,
+//   };
+
+//   console.log("Dados enviados para o backend:", body);
+
+//   const { status } = await api.post("/api/users/", body);
+
+//   return status;
+// }
+
 export async function CreateAccount({
   name,
   email,
@@ -52,14 +74,33 @@ export async function CreateAccount({
   nif,
   password,
 }: SignUpType): Promise<number> {
-  const { status } = await api.post("/api/users/", {
+  const body = {
     name,
     email,
     role,
     nif,
     password,
-  });
-  return status;
+  };
+
+  console.log("📤 Dados enviados para o backend:", body);
+
+  try {
+    const { status, data } = await api.post("/api/users/", body);
+
+    console.log("📥 Resposta do backend:", data);
+
+    return status;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("❌ ERRO DO BACKEND:");
+      console.log("Status:", error.response?.status);
+      console.log("Resposta:", error.response?.data);
+    } else {
+      console.log("❌ Erro:", error);
+    }
+
+    throw error;
+  }
 }
 
 export async function BuscarUsuario(id: string): Promise<PerfilUsuario> {

@@ -7,6 +7,7 @@ function TranslateRoleLabel(label: string) {
   if (label === "inspector") return "Inspetor";
   if (label === "teacher") return "Professor";
   if (label === "direction") return "Direção";
+  if (label === "kitchen") return "Cozinha";
 
   return label;
 }
