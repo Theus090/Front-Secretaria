@@ -34,3 +34,8 @@ export async function removerUserId() {
   if (Platform.OS === "web") return;
   await SecureStore.deleteItemAsync(USER_ID_KEY);
 }
+export async function obterIdUsuarioLogado(): Promise<string | null> {
+  const idSalvo = await obterUserId();
+  if (!idSalvo) return null;
+  return String(JSON.parse(idSalvo));
+}
