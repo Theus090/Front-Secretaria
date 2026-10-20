@@ -5,18 +5,15 @@ import Foundation from "@expo/vector-icons/Foundation";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
+import useGerenciamentoViewModel from "../../ViewModel/useGerenciamentoViewModel";
 
 export default function App() {
-  const router = useRouter();
-
-  function handlePress() {
-    router.navigate("/(tabs)/contagem");
-  }
+    const { PageConfig } = useGerenciamentoViewModel();
   return (
     <View className="flex-1 w-full p-5 gap-3 justify-center items-center">
       <View className="border w-full gap-2 rounded-2xl flex-row p-5">
         <Ionicons name="people" size={20} color="red" />
-        <Pressable className="" onPress={handlePress}>
+        <Pressable className="" onPress={PageConfig}>
           <Text>Gerenciar usuários</Text>
           <Text className="text-sm">Adicionar, editar ou remover acessos</Text>
         </Pressable>
