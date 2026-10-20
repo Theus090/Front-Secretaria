@@ -1,50 +1,45 @@
-import { View, Text, Pressable } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import Feather from "@expo/vector-icons/Feather";
-import Foundation from "@expo/vector-icons/Foundation";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { useEffect } from "react";
-import { useRouter } from "expo-router";
+import {
+    ActivityIndicator,
+    Button,
+    FlatList,
+    Pressable,
+    Text,
+    View,
+} from "react-native";
 import useGerenciamentoViewModel from "../../ViewModel/useGerenciamentoViewModel";
 
-export default function App() {
-    const { PageConfig } = useGerenciamentoViewModel();
+export default function GerenciamentoScreen() {
+  const { users, loading, error, refresh } = useGerenciamentoViewModel();
+
+  if (loading && users.length === 0) {
+    return <ActivityIndicator className="" size="large" />;
+  }
+
+  if (error) {
+    return (
+      <View className="">
+        <Text>{error}</Text>
+        <Button title="Tentar novamente" onPress={() => refresh()} />
+      </View>
+    );
+  }
+
   return (
-    <View className="flex-1 w-full p-5 gap-3 justify-center items-center">
-      <View className="border w-full gap-2 rounded-2xl flex-row p-5">
-        <Ionicons name="people" size={20} color="red" />
-        <Pressable className="" onPress={PageConfig}>
-          <Text>Gerenciar usuários</Text>
-          <Text className="text-sm">Adicionar, editar ou remover acessos</Text>
-        </Pressable>
-      </View>
-
-      <View className="border w-full gap-2 rounded-2xl flex-row p-5">
-        <Feather name="trash-2" size={20} color="red" />
-
-        <Pressable className="">
-          <Text className="text-sm">Excluir contagens</Text>
-          <Text className="text-sm">
-            Remover registros de contagem de lanches
-          </Text>
-        </Pressable>
-      </View>
-      <View className="border w-full gap-2 rounded-2xl flex-row p-5">
-        <Foundation name="graph-bar" size={20} color="red" />
-        <Pressable className="">
-          <Text>Relatórios gerais</Text>
-          <Text className="text-sm">Visão completa de todas as turmas </Text>
-        </Pressable>
-      </View>
-      <View className="border w-full gap-2 rounded-2xl flex-row p-5">
-        <FontAwesome6 name="person-circle-exclamation" size={20} color="red" />
-        <Pressable className="">
-          <Text>Apagar usuário</Text>
-          <Text className="text-sm">
-            Remover usuarios do sistemas permanentes
-          </Text>
-        </Pressable>
-      </View>
-    </View>
+    <FlatList
+      data={users}
+      keyExtractor={(item) => String(item.id_usuario)}
+      refreshing={loading}
+      onRefresh={() => refresh()}
+      renderItem={({ item }) => (
+        <View className=" bg-slate-400 p-2">
+          <Text className="text-2xl">{item.nome}</Text>
+          <Text>{item.email}</Text>
+          <Pressable className="h-16 justify-center rounded-xl border border-gray-200 px-4">
+            <Text className="">Excluir</Text>
+          </Pressable>
+        </View>
+      )}
+      ListEmptyComponent={<Text>Nenhum usuário encontrado</Text>}
+    />
   );
 }
