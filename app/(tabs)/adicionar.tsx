@@ -4,6 +4,7 @@ import { obterUserId } from "@/lib/secureStore";
 import { CriarOrdemServico } from "@/service/task.service";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import {
   Alert,
@@ -13,6 +14,7 @@ import {
   Text,
   View,
 } from "react-native";
+import SeletorDeImagem from "../../components/SeletorDeImagem/SeletorDeImagem";
 
 type Urgencia = "normal" | "Nao-Urgente" | "Urgente";
 
@@ -28,7 +30,11 @@ const dataParaApi = (data: Date) => {
 
 export default function Details() {
   const hoje = new Date();
+  const [imagem, setImagem] = useState<ImagePicker.ImagePickerAsset | null>(
+    null,
+  );
 
+  const [isImagemError, setIsImagemError] = useState(false);
   const [dataCriacao, setDataCriacao] = useState(new Date());
   const [prazo, setPrazo] = useState<Date | null>(null);
   const [setor, setSetor] = useState("select");
@@ -306,6 +312,13 @@ export default function Details() {
             <Text className="mt-1 text-red-600">Selecione a urgência.</Text>
           )}
         </View>
+        <SeletorDeImagem
+          label="Imagem"
+          value={imagem}
+          setValue={setImagem}
+          isError={isImagemError}
+          errorMessage="Selecione uma imagem"
+        />
       </View>
 
       <Botao className="mt-6" onPress={criarOrdemServico} disabled={enviando}>
