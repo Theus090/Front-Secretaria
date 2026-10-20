@@ -1,6 +1,4 @@
 import React from 'react';
-import { BuscarUsuario } from "../service/user.service";
-import CardContagem from '@/components/CardContagem/CardContagem';
 import {
   ActivityIndicator,
   FlatList,
@@ -11,18 +9,18 @@ import {
 } from 'react-native';
 import useGerenciamentoViewModel from '../ViewModel/useGerenciamentoViewModel';
 
-export default function UsersScreen() {
+export default function GerenciamentoScreen() {
   const { users, loading, error, refresh } = useGerenciamentoViewModel();
 
   if (loading && users.length === 0) {
-    return <ActivityIndicator style={styles.center} size="large" />;
+    return <ActivityIndicator className="" size="large" />;
   }
 
   if (error) {
     return (
-      <View style={styles.center}>
+      <View className="">
         <Text>{error}</Text>
-        <Button title="Tentar novamente" onPress={refresh} />
+        <Button title="Tentar novamente" onPress={() => refresh()} />
       </View>
     );
   }
@@ -32,19 +30,15 @@ export default function UsersScreen() {
       data={users}
       keyExtractor={(item) => String(item.id_usuario)}
       refreshing={loading}
-      onRefresh={refresh}
+      onRefresh={() => refresh()}
       renderItem={({ item }) => (
-        <View style={styles.item}>
-          <Text style="">{item.nome}</Text>
+        <View className=" bg-slate-400 p-2">
+          <Text className="text-2xl">{item.nome}</Text>
           <Text>{item.email}</Text>
         </View>
       )}
+      ListEmptyComponent={<Text>Nenhum usuário encontrado</Text>}
     />
   );
 }
 
-const styles = StyleSheet.create({
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  item: { padding: 16, borderBottomWidth: 1, borderColor: '#eee' },
-  name: { fontWeight: 'bold' },
-});
