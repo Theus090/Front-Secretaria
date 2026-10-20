@@ -2,7 +2,7 @@ import React from 'react';
 import { BuscarUsuario } from "../service/user.service";
 import { View, Text } from 'react-native';
 import { FlatList } from 'react-native';
-import useGerenciamentoViewModel from '../ViewModel/useGerenciamentoViewModel';
+import CardContagem from '@/components/CardContagem/CardContagem';
 
 export default function Configuracao() {
     const { usuario, setUsuario, carregando, erro } = useGerenciamentoViewModel();
@@ -17,7 +17,7 @@ export default function Configuracao() {
             contentContainerStyle={{ padding: 16, gap: 16 }}
             renderItem={({ item }) => <CardContagem  name="count" sala={item}  />}
             
-            }
+            
             </View>
         </View>
     );

@@ -20,20 +20,20 @@ type CardContagemProps = {
 };
 
 const CardContagem = ({ sala, name }: CardContagemProps) => {
-  const [status, setStatus] = useState();
+  const [statusCont, setStatusCont] = useState(sala.status);
 
   const { onSubmit, handleSubmit, control } = useCountViewModel();
 
   return (
-    <View className="flex items-center justify-around border rounded-lg h-40 p-40">
+    <View className="flex items-center justify-center rounded-md h-60 gap-10 shadow">
       <View className="flex flex-row gap-10">
-        <Text>{sala.nome}</Text>
-        {status === "Pendente" ? (
-          <Text className="text-red-500">{status}</Text>
-        ) : status === "Concluido" ? (
-          <Text className="text-green-500">{status}</Text>
+        <Text className="font-bold">{sala.nome}</Text>
+        {statusCont === 1 ? (
+          <Text className="text-red-500">Pendente</Text>
+        ) : statusCont === 0 ? (
+          <Text className="text-green-500">Concluido</Text>
         ) : (
-          <Text className="text-gray-500">{status || "Sem status"}</Text>
+          <Text className="text-gray-500">{statusCont || "Sem status"}</Text>
         )}
       </View>
 
@@ -53,7 +53,6 @@ const CardContagem = ({ sala, name }: CardContagemProps) => {
         <View>
           <Pressable
             onPress={handleSubmit(({ count }) => {
-
               onSubmit({ count, id_sala: sala.id_sala });
             })}
           >

@@ -1,6 +1,6 @@
 import { countType } from "../schemas/count.schema";
 import { AxiosError } from "axios";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateCount } from "../service/contagem.service";
 import { useForm } from "react-hook-form";
 import { obterUserId } from "@/lib/secureStore";
@@ -8,8 +8,12 @@ import { useCallback, useState } from "react";
 import { ListSalas } from "@/service/contagem.service";
 import { useQuery } from "@tanstack/react-query";
 import { CountForm, CountSubmit } from "./useContagemViewModel";
+import { updateSalaSchema, UpdateSalaType } from "@/schemas/sala.schema";
+import { UpdateStatusSala } from "../service/contagem.service";
 
 export default function useCountViewModel() {
+  const queryClient = useQueryClient();
+
   const [usuarioId, setUsuarioId] = useState<string>("0");
 
   obterUserId().then((id) => {
@@ -35,7 +39,19 @@ export default function useCountViewModel() {
   const createNewCount = useMutation<number, AxiosError, countType>({
     mutationFn: ({ count, status, user, classroom }: countType) =>
       CreateCount({ count, status, classroom, user }),
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["counts"] });
+    },
+
+    onError: (error) => {},
+  });
+
+  const UpdateSalaStatus = useMutation<number, AxiosError, UpdateSalaType>({
+    mutationFn: ({ id_sala, status }: UpdateSalaType) =>
+      UpdateStatusSala({ id_sala, status }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["counts"] });
+    },
 
     onError: (error) => {},
   });
@@ -43,13 +59,14 @@ export default function useCountViewModel() {
   const onSubmit = ({ count, id_sala }: CountSubmit) => {
     const payload = {
       count: count,
-      status: 1,
+      status: 0,
       classroom: id_sala,
       user: usuarioId,
     };
     createNewCount.mutateAsync(payload);
+    // UpdateSalaStatus.mutateAsync()
 
     return;
   };
-  return { onSubmit, control, handleSubmit };
+  return { onSubmit, control, handleSubmit, obterUserId };
 }
