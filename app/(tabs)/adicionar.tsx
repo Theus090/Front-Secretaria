@@ -1,10 +1,13 @@
+
 import CampoDeTexto from "@/components/CampoDeTexto/CampoDeTexto";
 import Botao from "@/components/botao/botao";
 import { obterUserId } from "@/lib/secureStore";
 import { CriarOrdemServico } from "@/service/task.service";
+
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
+
 import {
   Alert,
   Platform,
@@ -16,7 +19,8 @@ import {
 
 type Urgencia = "normal" | "Nao-Urgente" | "Urgente";
 
-const formatarData = (data: Date) => data.toLocaleDateString("pt-BR");
+const formatarData = (data: Date) =>
+  data.toLocaleDateString("pt-BR");
 
 const dataParaApi = (data: Date) => {
   const ano = data.getFullYear();
@@ -27,15 +31,13 @@ const dataParaApi = (data: Date) => {
 };
 
 export default function Details() {
-  const hoje = new Date();
-
-  const [dataCriacao, setDataCriacao] = useState(new Date());
   const [prazo, setPrazo] = useState<Date | null>(null);
   const [setor, setSetor] = useState("select");
   const [descricao, setDescricao] = useState("");
-  const [urgencia, setUrgencia] = useState<Urgencia | "select">("select");
+  const [urgencia, setUrgencia] = useState<Urgencia | "select">(
+    "select"
+  );
 
-  const [mostrarDataCriacao, setMostrarDataCriacao] = useState(false);
   const [mostrarPrazo, setMostrarPrazo] = useState(false);
   const [enviando, setEnviando] = useState(false);
 
@@ -46,13 +48,19 @@ export default function Details() {
     urgencia: false,
   });
 
+  // Data atual sem considerar o horário.
+  const hoje = new Date();
+
   const hojeSemHorario = new Date(
     hoje.getFullYear(),
     hoje.getMonth(),
-    hoje.getDate(),
+    hoje.getDate()
   );
 
   async function criarOrdemServico() {
+    // A data de criação é gerada automaticamente.
+    const dataCriacao = new Date();
+
     const novosErros = {
       prazo: !prazo,
       setor: setor === "select",
@@ -63,7 +71,10 @@ export default function Details() {
     setErros(novosErros);
 
     if (Object.values(novosErros).some(Boolean)) {
-      Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
+      Alert.alert(
+        "Atenção",
+        "Preencha todos os campos obrigatórios."
+      );
       return;
     }
 
@@ -71,25 +82,59 @@ export default function Details() {
       return;
     }
 
+    // Normaliza as datas para comparar somente dia, mês e ano.
     const prazoSemHorario = new Date(
       prazo.getFullYear(),
       prazo.getMonth(),
-      prazo.getDate(),
+      prazo.getDate()
     );
 
+    const dataCriacaoSemHorario = new Date(
+      dataCriacao.getFullYear(),
+      dataCriacao.getMonth(),
+      dataCriacao.getDate()
+    );
+
+    // Verifica se as datas são válidas.
+    if (
+      Number.isNaN(dataCriacao.getTime()) ||
+      Number.isNaN(prazo.getTime())
+    ) {
+      Alert.alert(
+        "Data inválida",
+        "Verifique a data de criação e o prazo estipulado."
+      );
+      return;
+    }
+
+    // O prazo não pode ser anterior à data atual.
     if (prazoSemHorario < hojeSemHorario) {
-      Alert.alert("Prazo inválido", "O prazo não pode ser anterior a hoje.");
+      Alert.alert(
+        "Prazo inválido",
+        "O prazo não pode ser anterior a hoje."
+      );
+      return;
+    }
+
+    // Garante que a data de criação não seja futura.
+    if (dataCriacaoSemHorario > hojeSemHorario) {
+      Alert.alert(
+        "Data inválida",
+        "A data de criação não pode ser posterior a hoje."
+      );
       return;
     }
 
     try {
       setEnviando(true);
 
-      // Obtém automaticamente o ID do usuário que fez login.
       const userId = await obterUserId();
 
       if (!userId) {
-        Alert.alert("Sessão expirada", "Faça login novamente.");
+        Alert.alert(
+          "Sessão expirada",
+          "Faça login novamente."
+        );
         return;
       }
 
@@ -101,7 +146,7 @@ export default function Details() {
         urgencia,
       });
 
-      setDataCriacao(new Date());
+      // Limpa os campos após o cadastro.
       setPrazo(null);
       setSetor("select");
       setDescricao("");
@@ -114,13 +159,16 @@ export default function Details() {
         urgencia: false,
       });
 
-      Alert.alert("Sucesso", "Ordem de serviço criada com sucesso!");
+      Alert.alert(
+        "Sucesso",
+        "Ordem de serviço criada com sucesso!"
+      );
     } catch (error) {
       console.error("Erro ao criar ordem de serviço:", error);
 
       Alert.alert(
         "Erro",
-        "Não foi possível criar a ordem de serviço. Verifique a conexão e tente novamente.",
+        "Não foi possível criar a ordem de serviço. Verifique a conexão e tente novamente."
       );
     } finally {
       setEnviando(false);
@@ -130,7 +178,10 @@ export default function Details() {
   return (
     <ScrollView
       className="flex-1 bg-white"
-      contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+      contentContainerStyle={{
+        padding: 20,
+        paddingBottom: 40,
+      }}
       keyboardShouldPersistTaps="handled"
     >
       <View className="mb-6">
@@ -144,49 +195,28 @@ export default function Details() {
       </View>
 
       <View className="gap-5">
-        {/* Data de criação */}
+        {/* Data de criação automática */}
         <View className="gap-1">
-          <Text className="text-xl text-black">Data de criação</Text>
+          <Text className="text-xl text-black">
+            Data de criação
+          </Text>
 
-          <Pressable
-            onPress={() => setMostrarDataCriacao(true)}
-            className="h-16 justify-center rounded-xl border border-gray-200 bg-[#f8f9fa] px-4"
-          >
+          <View className="h-16 justify-center rounded-xl border border-gray-200 bg-gray-100 px-4">
             <Text className="text-base text-black">
-              {formatarData(dataCriacao)}
+              {formatarData(hojeSemHorario)}
             </Text>
-          </Pressable>
+          </View>
 
-          {mostrarDataCriacao && (
-            <DateTimePicker
-              value={dataCriacao}
-              mode="date"
-              display={Platform.OS === "ios" ? "spinner" : "default"}
-              maximumDate={hojeSemHorario}
-              onChange={(event, selectedDate) => {
-                if (Platform.OS !== "ios" || event.type === "dismissed") {
-                  setMostrarDataCriacao(false);
-                }
-
-                if (selectedDate && event.type !== "dismissed") {
-                  setDataCriacao(selectedDate);
-                }
-              }}
-            />
-          )}
-
-          {Platform.OS === "ios" && mostrarDataCriacao && (
-            <Botao onPress={() => setMostrarDataCriacao(false)}>
-              <Text className="text-center font-bold text-white">
-                Confirmar data
-              </Text>
-            </Botao>
-          )}
+          <Text className="text-sm text-gray-500">
+            A data é preenchida automaticamente.
+          </Text>
         </View>
 
-        {/* Prazo */}
+        {/* Prazo estipulado */}
         <View className="gap-1">
-          <Text className="text-xl text-black">Prazo estipulado</Text>
+          <Text className="text-xl text-black">
+            Prazo estipulado
+          </Text>
 
           <Pressable
             onPress={() => setMostrarPrazo(true)}
@@ -194,10 +224,14 @@ export default function Details() {
           >
             <Text
               className={
-                prazo ? "text-base text-black" : "text-base text-gray-400"
+                prazo
+                  ? "text-base text-black"
+                  : "text-base text-gray-400"
               }
             >
-              {prazo ? formatarData(prazo) : "Selecione o prazo"}
+              {prazo
+                ? formatarData(prazo)
+                : "Selecione o prazo"}
             </Text>
           </Pressable>
 
@@ -205,16 +239,41 @@ export default function Details() {
             <DateTimePicker
               value={prazo ?? hojeSemHorario}
               mode="date"
-              display={Platform.OS === "ios" ? "spinner" : "default"}
+              display={
+                Platform.OS === "ios" ? "spinner" : "default"
+              }
               minimumDate={hojeSemHorario}
               onChange={(event, selectedDate) => {
-                if (Platform.OS !== "ios" || event.type === "dismissed") {
+                if (
+                  Platform.OS !== "ios" ||
+                  event.type === "dismissed"
+                ) {
                   setMostrarPrazo(false);
                 }
 
-                if (selectedDate && event.type !== "dismissed") {
-                  setPrazo(selectedDate);
-                  setErros((prev) => ({ ...prev, prazo: false }));
+                if (
+                  selectedDate &&
+                  event.type !== "dismissed"
+                ) {
+                  const dataSelecionada = new Date(
+                    selectedDate.getFullYear(),
+                    selectedDate.getMonth(),
+                    selectedDate.getDate()
+                  );
+
+                  if (dataSelecionada < hojeSemHorario) {
+                    Alert.alert(
+                      "Prazo inválido",
+                      "O prazo não pode ser anterior a hoje."
+                    );
+                    return;
+                  }
+
+                  setPrazo(dataSelecionada);
+                  setErros((prev) => ({
+                    ...prev,
+                    prazo: false,
+                  }));
                 }
               }}
             />
@@ -237,7 +296,9 @@ export default function Details() {
 
         {/* Setor responsável */}
         <View className="gap-1">
-          <Text className="text-xl text-black">Setor responsável</Text>
+          <Text className="text-xl text-black">
+            Setor responsável
+          </Text>
 
           <View className="h-16 w-full overflow-hidden rounded-xl border border-gray-200 bg-[#f8f9fa]">
             <Picker
@@ -246,15 +307,24 @@ export default function Details() {
                 setSetor(String(itemValue));
 
                 if (itemValue !== "select") {
-                  setErros((prev) => ({ ...prev, setor: false }));
+                  setErros((prev) => ({
+                    ...prev,
+                    setor: false,
+                  }));
                 }
               }}
             >
-              <Picker.Item label="Selecione o setor" value="select" />
+              <Picker.Item
+                label="Selecione o setor"
+                value="select"
+              />
               <Picker.Item label="Direção" value="direction" />
               <Picker.Item label="Professor" value="teacher" />
               <Picker.Item label="Inspetor" value="inspector" />
-              <Picker.Item label="Coordenação" value="coordination" />
+              <Picker.Item
+                label="Coordenação"
+                value="coordination"
+              />
               <Picker.Item label="Cozinha" value="kitchen" />
             </Picker>
           </View>
@@ -282,7 +352,9 @@ export default function Details() {
 
         {/* Urgência */}
         <View className="gap-1">
-          <Text className="text-xl text-black">Urgência</Text>
+          <Text className="text-xl text-black">
+            Urgência
+          </Text>
 
           <View className="h-16 w-full overflow-hidden rounded-xl border border-gray-200 bg-[#f8f9fa]">
             <Picker
@@ -291,26 +363,43 @@ export default function Details() {
                 setUrgencia(itemValue as Urgencia | "select");
 
                 if (itemValue !== "select") {
-                  setErros((prev) => ({ ...prev, urgencia: false }));
+                  setErros((prev) => ({
+                    ...prev,
+                    urgencia: false,
+                  }));
                 }
               }}
             >
-              <Picker.Item label="Selecione a urgência" value="select" />
+              <Picker.Item
+                label="Selecione a urgência"
+                value="select"
+              />
               <Picker.Item label="Normal" value="normal" />
-              <Picker.Item label="Não urgente" value="Nao-Urgente" />
+              <Picker.Item
+                label="Não urgente"
+                value="Nao-Urgente"
+              />
               <Picker.Item label="Urgente" value="Urgente" />
             </Picker>
           </View>
 
           {erros.urgencia && (
-            <Text className="mt-1 text-red-600">Selecione a urgência.</Text>
+            <Text className="mt-1 text-red-600">
+              Selecione a urgência.
+            </Text>
           )}
         </View>
       </View>
 
-      <Botao className="mt-6" onPress={criarOrdemServico} disabled={enviando}>
+      <Botao
+        className="mt-6"
+        onPress={criarOrdemServico}
+        disabled={enviando}
+      >
         <Text className="text-center font-bold text-white">
-          {enviando ? "Enviando..." : "Criar ordem de serviço"}
+          {enviando
+            ? "Enviando..."
+            : "Criar ordem de serviço"}
         </Text>
       </Botao>
     </ScrollView>
