@@ -89,6 +89,7 @@ export async function BuscarUsuario(id: string): Promise<PerfilUsuario> {
   const u = data.data as PerfilUsuario;
 
   return {
+    id_usuario: u.id_usuario,
     nome: u.nome,
     email: u.email,
     cargo: u.cargo,

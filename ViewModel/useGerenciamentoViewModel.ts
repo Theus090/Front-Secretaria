@@ -1,39 +1,51 @@
-import { useRouter } from "expo-router";
-import { useState, useEffect,useCallback } from "react";
+import { getUsers } from "@/service/usersAll.service";
+import { deleteUserById } from '@/service/deleteUser.service'
+import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Alert } from "react-native";
+import api from "../lib/axios.config";
 import { PerfilUsuario } from "../types/usuario";
-import {userService} from "../service/usersAll.service";
-
 export default function useGerenciamentoViewModel() {
+  const usuariosQuery = useQuery<PerfilUsuario[], AxiosError>({
+    queryKey: ["usuarios"],
+    queryFn: getUsers,
+  });
+  const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
-    const router = useRouter();
-    const [usuario, setUsuario] = useState<PerfilUsuario | null>(null);
-    const [carregando, setCarregando] = useState(true);
-    const [erro, setErro] = useState<string | null>(null);
-    
-    const PageConfig = () => {
-        router.navigate("/configuracao")
-    };
+  const deleteUser = () => {
+    Alert.alert("Excluir usuário", "Tem certeza que deseja excluir?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Excluir",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            await deleteUserById(id)
+            router.back();
+          } catch (error) {
+            Alert.alert("Erro", "Não foi possível excluir a usuário");
+          }
+        },
+      },
+    ]);
+  };
 
-  const [users, setUsers] = useState<PerfilUsuario[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await userService.getUsers();
-      setUsers(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Erro desconhecido');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const error = !usuariosQuery.error
+    ? null
+    : !usuariosQuery.error.response
+      ? "Sem conexão com o servidor"
+      : "Não foi possível carregar os usuários";
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  return {
+    users: usuariosQuery.data || [],
+    loading: usuariosQuery.isLoading,
+    refreshing: usuariosQuery.isRefetching,
+    error,
+    refresh: usuariosQuery.refetch,
+    deleteUser
 
-  return { users, loading, error, refresh: fetchUsers, PageConfig };
+  };
 }
