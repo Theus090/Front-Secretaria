@@ -96,3 +96,29 @@ export async function BuscarUsuario(id: string): Promise<PerfilUsuario> {
     nif: u.nif,
   };
 }
+
+
+//Editar & excluir perfil
+
+export type AtualizarUsuarioDados = {
+  name: string;
+  email: string;
+  nif: string;
+};
+
+export async function AtualizarUsuario(
+  id: string,
+  dados: AtualizarUsuarioDados
+) {
+  const { data } = await api.patch("/api/users/" + id, {
+    ...dados,
+    id_usuario: Number(id),
+  });
+
+  return data;
+}
+
+export async function ExcluirUsuario(id: string): Promise<number> {
+  const { status } = await api.delete(`/api/users/${id}`);
+  return status;
+}
