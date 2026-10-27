@@ -26,8 +26,9 @@ export async function Signin({ email, password }: SigninSchema) {
 
   const { id_usuario, cargo } = data.data as UserLogin;
 
-  await salvarUserId(JSON.stringify(id_usuario));
-  await salvarCargoUsuario(JSON.stringify(cargo));
+  await salvarCargoUsuario(cargo);
+  await salvarUserId(id_usuario)
+
 
   return status;
 }

@@ -59,14 +59,26 @@ export default function useCountViewModel() {
   const onSubmit = ({ count, id_sala }: CountSubmit) => {
     const payload = {
       count: count,
-      status: 0,
+      status: 1,
       classroom: id_sala,
       user: usuarioId,
     };
+
     createNewCount.mutateAsync(payload);
-    // UpdateSalaStatus.mutateAsync()
 
     return;
   };
-  return { onSubmit, control, handleSubmit, obterUserId };
+  
+// const checkCount = ({ id_contagem, status }: CheckSubmit) => {
+//     const payload = {
+//       id_contagem,
+//       status
+//     };
+
+//     UpdateSalaStatus.mutateAsync(payload)
+
+//     return;
+//   };
+
+  return { onSubmit, control, handleSubmit, obterUserId, errorsCount: errors };
 }

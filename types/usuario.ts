@@ -5,3 +5,5 @@ export type PerfilUsuario = {
   cargo: string;
   nif: string;
 };
+
+export type AtualizarUsuario = Pick<PerfilUsuario, "nome" | "email">;

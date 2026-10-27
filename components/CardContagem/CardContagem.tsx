@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Contagem } from "../../types/contagem";
 import { Sala } from "../../types/sala";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import CampoTextHookForm from "../CampoTextoHookForm/CampoTextoHookForm";
 import {
   Control,
   FieldValues,
@@ -13,6 +12,8 @@ import {
 } from "react-hook-form";
 import { CountForm, CountSubmit } from "@/ViewModel/useContagemViewModel";
 import useCountViewModel from "@/ViewModel/useCountViewModel";
+import CampoDeTexto from "../CampoDeTexto/CampoDeTexto";
+import CampoTextHookForm from "../CampoTextoHookForm/CampoTextoHookForm";
 
 type CardContagemProps = {
   sala: Sala;
@@ -22,32 +23,26 @@ type CardContagemProps = {
 const CardContagem = ({ sala, name }: CardContagemProps) => {
   const [statusCont, setStatusCont] = useState(sala.status);
 
-  const { onSubmit, handleSubmit, control } = useCountViewModel();
+  const { onSubmit, handleSubmit, control, errorsCount } = useCountViewModel();
 
   return (
-    <View className="flex items-center justify-center rounded-md h-60 gap-10 shadow">
-      <View className="flex flex-row gap-10">
+    <View className="flex items-center justify-center h-60 gap-10 rounded-2xl bg-white border-gray-400">
+      <View className="flex flex-row">
         <Text className="font-bold">{sala.nome}</Text>
-        {statusCont === 1 ? (
-          <Text className="text-red-500">Pendente</Text>
-        ) : statusCont === 0 ? (
-          <Text className="text-green-500">Concluido</Text>
-        ) : (
-          <Text className="text-gray-500">{statusCont || "Sem status"}</Text>
-        )}
       </View>
 
       <View className="flex">
         <Text>Previsão: {sala.quantidade}</Text>
       </View>
 
-      <View className="flex flex-row h-10 gap-10">
+      <View className="flex flex-row gap-10 items-center justify-center">
         <View></View>
         <View className="flex flex-row items-center justify-between gap-10">
           <CampoTextHookForm
-            label="Contagem de Alunos"
-            name={name}
+            name={"count"}
+            label="Contagem de alunos"
             control={control}
+            errorMessage={errorsCount.count?.message}
           />
         </View>
         <View>

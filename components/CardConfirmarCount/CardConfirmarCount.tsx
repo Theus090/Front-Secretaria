@@ -7,30 +7,40 @@ import { Path } from "react-hook-form";
 import { CountForm } from "@/ViewModel/useContagemViewModel";
 import useCountViewModel from "@/ViewModel/useCountViewModel";
 import { Contagem } from "@/types/contagem";
+import { SalaContagem } from "@/types/salaContagem";
 
 type CardContagemProps = {
-  sala: Sala;
-  name: Path<CountForm>;
-  id_count: string;
+  salaContagem: SalaContagem;
 };
 
-const CardConfirmarCount = ({ sala, id_count }: CardContagemProps) => {
-  const { onSubmit, handleSubmit, control } = useCountViewModel();
+const CardConfirmarCount = ({ salaContagem }: CardContagemProps) => {
+  const { onSubmit, handleSubmit, control, errorsCount } = useCountViewModel();
 
   return (
-    <View className="flex items-center justify-center rounded-md h-60 gap-10 shadow">
+    <View className="flex items-center justify-center h-30 gap-10 bg-white rounded-2xl">
       <View className="flex flex-row gap-10">
-        <Text className="font-bold">{sala.nome}</Text>
+        <Text className="font-bold">{salaContagem.nome_sala}</Text>
       </View>
 
       <View className="flex">
-        <Text>Quantidade: {sala.quantidade}</Text>
+        <Text>Quantidade: {salaContagem.contagem}</Text>
       </View>
 
-      <View className="flex flex-row h-10 gap-10">
+      <View className="flex flex-row gap-10 items-center justify-center">
+        <View></View>
+        <View className="flex flex-row items-center justify-between gap-10">
+          <CampoTextHookForm
+            name={"count"}
+            label="Contagem de alunos"
+            control={control}
+            errorMessage={errorsCount.count?.message}
+          />
+        </View>
         <View>
           <Pressable
-          // onPress={()}
+            onPress={handleSubmit(({ count }) => {
+              // onSubmit({ count, id_sala: sala.id_sala });
+            })}
           >
             <AntDesign name="send" size={24} color="black" />
           </Pressable>

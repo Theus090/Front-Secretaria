@@ -4,6 +4,7 @@ import { countType } from "../schemas/count.schema";
 import { countSchema } from "../schemas/count.schema";
 import { updateSalaSchema, UpdateSalaType } from "../schemas/sala.schema";
 import { Contagem } from "@/types/contagem";
+import { SalaContagem } from "@/types/salaContagem";
 
 type ListSalaResponse = {
   data: Sala[];
@@ -13,14 +14,20 @@ type ListCountResponse = {
   data: Contagem[];
 };
 
+type ListSalaContagemResponse = {
+  data: SalaContagem[];
+};
+
 export async function ListSalas(): Promise<Sala[]> {
   const { data } = await api.get<ListSalaResponse>("/api/room/");
 
   return data.data;
 }
 
-export async function ListCounts(): Promise<Contagem[]> {
-  const { data } = await api.get<ListCountResponse>("/api/count/");
+export async function ListCountsRoom(): Promise<SalaContagem[]> {
+  const { data } = await api.get<ListSalaContagemResponse>("/api/count/find");
+
+  console.log(data.data)
 
   return data.data;
 }
