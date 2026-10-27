@@ -52,9 +52,6 @@ export default function GerenciamentoScreen() {
             >
               <FontAwesome5 name="trash" size={18} color="#b91c1c" />
             </Pressable>
-            <Pressable className="p-2" hitSlop={8} onPress={() => {}}>
-              <FontAwesome name="pencil-square-o" size={24} color="red" />
-            </Pressable>
           </View>
         </View>
       )}

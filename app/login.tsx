@@ -4,10 +4,9 @@ import useIndexViewModel from "@/ViewModel/useIndexViewModel";
 import { Link } from "expo-router";
 import { useHeaderHeight } from "expo-router/react-navigation";
 import {
-  Image,
+  ImageBackground,
   KeyboardAvoidingView,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -20,13 +19,10 @@ const App = () => {
   const headerHeight = useHeaderHeight();
 
   return (
-    <View className="flex-1">
-      <Image
-        source={require("../assets/images/image.png")}
-        style={StyleSheet.absoluteFill}
-        resizeMode="cover"
-      />
-
+    <ImageBackground
+      source={require("../assets/images/image.png")}
+      className="cover h-full w-full"
+    >
       <SafeAreaView className="flex-1 items-center">
         <KeyboardAvoidingView
           className="flex-1 w-full items-center"
@@ -38,7 +34,7 @@ const App = () => {
             contentContainerClassName="items-center pb-8"
             keyboardShouldPersistTaps="handled"
           >
-            <View className="gap-6 mt-36">
+            <View className="gap-6  mt-36">
               <View className="p-6 flex justify-center items-center h-full rounded-2xl">
                 <View className="mb-8 items-center">
                   <Text className="font-sans text-black text-2xl">Login</Text>
@@ -84,7 +80,7 @@ const App = () => {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </View>
+    </ImageBackground>
   );
 };
 

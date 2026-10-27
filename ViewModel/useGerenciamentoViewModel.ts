@@ -2,8 +2,10 @@ import { deleteUserById } from "@/service/deleteUser.service";
 import { getUsers } from "@/service/usersAll.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { Alert } from "react-native";
+import { Alert, TextInput } from "react-native";
 import { PerfilUsuario } from "../types/usuario";
+import { useRouter } from "expo-router";
+
 
 export default function useGerenciamentoViewModel() {
   const queryClient = useQueryClient();

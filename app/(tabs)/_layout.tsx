@@ -1,6 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { Text } from "react-native";
 export default function TabsLayout() {
   return (
