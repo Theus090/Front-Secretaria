@@ -1,8 +1,8 @@
 import api from "@/lib/axios.config";
 import { salvarCargoUsuario, salvarUserId } from "@/lib/secureStore";
+import { SignUpType } from "@/schemas/Cargo";
 import { isAxiosError } from "axios";
 import { SigninSchema } from "../schemas/signin.schema";
-import { SignUpType } from "../schemas/signup.schema";
 import { PerfilUsuario } from "../types/usuario";
 
 type UserLogin = {
@@ -45,27 +45,6 @@ export async function BasicSignin(email: string, password: string) {
   }
 }
 
-// export async function CreateAccount({
-//   name,
-//   email,
-//   role,
-//   nif,
-//   password,
-// }: SignUpType): Promise<number> {
-//   const body = {
-//     name,
-//     email,
-//     role,
-//     nif,
-//     password,
-//   };
-
-//   console.log("Dados enviados para o backend:", body);
-
-//   const { status } = await api.post("/api/users/", body);
-
-//   return status;
-// }
 
 export async function CreateAccount({
   name,
