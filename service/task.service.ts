@@ -6,6 +6,10 @@ type ListTasksResponse = {
   data: Task[];
 };
 
+type GetTaskResponse = {
+  data: Task;
+};
+
 export async function ListTasksByRole(cargo: string): Promise<Task[]> {
   const { data } = await api.get<ListTasksResponse>(
     `/api/tasks/listTaskRole/${cargo}`,
@@ -30,6 +34,25 @@ export async function CriarOrdemServico(
     const { data } = await api.post(`/api/tasks/newTask/${idUsuario}`, dados);
 
     return data;
+  } catch (error) {
+    if (isAxiosError(error)) {
+      console.log("STATUS:", error.response?.status);
+      console.log("RESPOSTA DO BACKEND:", error.response?.data);
+      console.log("URL:", error.config?.baseURL, error.config?.url);
+      console.log("MÉTODO:", error.config?.method);
+    } else {
+      console.log("ERRO INESPERADO:", error);
+    }
+
+    throw error;
+  }
+}
+
+export async function GetTaskById(idTask: string): Promise<Task> {
+  try {
+    const { data } = await api.get<GetTaskResponse>(`/api/tasks/listTask/${idTask}`);
+
+    return data.data;
   } catch (error) {
     if (isAxiosError(error)) {
       console.log("STATUS:", error.response?.status);
