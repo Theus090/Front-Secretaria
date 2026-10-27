@@ -1,39 +1,52 @@
-import { useRouter } from "expo-router";
-import { useState, useEffect,useCallback } from "react";
+import { deleteUserById } from "@/service/deleteUser.service";
+import { getUsers } from "@/service/usersAll.service";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { Alert } from "react-native";
 import { PerfilUsuario } from "../types/usuario";
-import {userService} from "../service/usersAll.service";
 
 export default function useGerenciamentoViewModel() {
+  const queryClient = useQueryClient();
 
-    const router = useRouter();
-    const [usuario, setUsuario] = useState<PerfilUsuario | null>(null);
-    const [carregando, setCarregando] = useState(true);
-    const [erro, setErro] = useState<string | null>(null);
-    
-    const PageConfig = () => {
-        router.navigate("/configuracao")
-    };
+  const usuariosQuery = useQuery<PerfilUsuario[], AxiosError>({
+    queryKey: ["usuarios"],
+    queryFn: getUsers,
+  });
 
-  const [users, setUsers] = useState<PerfilUsuario[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const deleteMutation = useMutation({
+    mutationFn: (userId: string) => deleteUserById(userId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["usuarios"] });
+    },
+    onError: () => {
+      Alert.alert("Erro", "Não foi possível excluir o usuário");
+    },
+  });
 
-  const fetchUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await userService.getUsers();
-      setUsers(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Erro desconhecido');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const deleteUser = (userId: string) => {
+    Alert.alert("Excluir usuário", "Tem certeza que deseja excluir?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Excluir",
+        style: "destructive",
+        onPress: () => deleteMutation.mutateAsync(userId),
+      },
+    ]);
+  };
 
-  useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+  const error = !usuariosQuery.error
+    ? null
+    : !usuariosQuery.error.response
+      ? "Sem conexão com o servidor"
+      : "Não foi possível carregar os usuários";
 
-  return { users, loading, error, refresh: fetchUsers, PageConfig };
+  return {
+    users: usuariosQuery.data ?? [],
+    loading: usuariosQuery.isLoading,
+    refreshing: usuariosQuery.isRefetching,
+    error,
+    refresh: usuariosQuery.refetch,
+    deleteUser,
+    deleting: deleteMutation.isPending,
+  };
 }
