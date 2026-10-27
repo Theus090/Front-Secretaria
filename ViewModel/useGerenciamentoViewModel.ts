@@ -7,7 +7,6 @@ import { PerfilUsuario } from "../types/usuario";
 
 export default function useGerenciamentoViewModel() {
   const queryClient = useQueryClient();
-
   const usuariosQuery = useQuery<PerfilUsuario[], AxiosError>({
     queryKey: ["usuarios"],
     queryFn: getUsers,
