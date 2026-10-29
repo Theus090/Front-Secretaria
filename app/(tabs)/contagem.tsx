@@ -26,8 +26,7 @@ const Contagem = () => {
     aoAtualizarContagem,
   } = useContagemViewModel();
 
-
-  console.log(cargo)
+  console.log(cargo);
   // Wait for cargo before deciding which branch to render
   if (isLoadingCargo) {
     return (
@@ -51,14 +50,20 @@ const Contagem = () => {
             <FlatList
               data={contagem}
               keyExtractor={(item) => String(item.id_contagem)}
-              contentContainerStyle={{ padding: 16, paddingBottom: 300, gap: 16,}}
+              contentContainerStyle={{
+                padding: 16,
+                paddingBottom: 300,
+                gap: 16,
+              }}
               renderItem={({ item }) => (
                 <CardConfirmarCount salaContagem={item} />
               )}
               refreshControl={
                 <RefreshControl
                   refreshing={isRefreshingCounts} // ✅ not negated
-                  onRefresh={aoAtualizarContagem}
+                  onRefresh={() => {
+                    aoAtualizarContagem();
+                  }}
                 />
               }
               ListEmptyComponent={
@@ -91,7 +96,9 @@ const Contagem = () => {
             refreshControl={
               <RefreshControl
                 refreshing={isRefreshingSalas} // ✅ not negated
-                onRefresh={aoAtualizarSalas}
+                onRefresh={() => {
+                  aoAtualizarSalas();
+                }}
               />
             }
             ListEmptyComponent={

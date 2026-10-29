@@ -1,8 +1,8 @@
-import { countType } from "../schemas/count.schema";
+import { countSchema, countType } from "../schemas/count.schema";
 import { AxiosError } from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateCount } from "../service/contagem.service";
-import { useForm } from "react-hook-form";
+import { Control, Resolver, useForm } from "react-hook-form";
 import { obterUserId } from "@/lib/secureStore";
 import { useCallback, useState } from "react";
 import { ListSalas } from "@/service/contagem.service";
@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { CountForm, CountSubmit } from "./useContagemViewModel";
 import { updateSalaSchema, UpdateSalaType } from "@/schemas/sala.schema";
 import { UpdateStatusSala } from "../service/contagem.service";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function useCountViewModel() {
   const queryClient = useQueryClient();
@@ -31,6 +32,7 @@ export default function useCountViewModel() {
     setValue,
     formState: { errors },
   } = useForm<CountForm>({
+    // resolver: zodResolver(countSchema) as unknown as Resolver<CountForm>,
     defaultValues: {
       count: 0,
     },
@@ -56,29 +58,28 @@ export default function useCountViewModel() {
     onError: (error) => {},
   });
 
-  const onSubmit = ({ count, id_sala }: CountSubmit) => {
+  const onSubmit = (ctrl: Control<CountForm>, sala_id: string) => (data: CountForm)=> {
     const payload = {
-      count: count,
+      count: data.count,
       status: 1,
-      classroom: id_sala,
+      classroom: sala_id,
       user: usuarioId,
     };
 
+    console.log("Clicou")
     createNewCount.mutateAsync(payload);
-
-    return;
   };
-  
-// const checkCount = ({ id_contagem, status }: CheckSubmit) => {
-//     const payload = {
-//       id_contagem,
-//       status
-//     };
 
-//     UpdateSalaStatus.mutateAsync(payload)
+  // const checkCount = ({ id_contagem, status }: CheckSubmit) => {
+  //     const payload = {
+  //       id_contagem,
+  //       status
+  //     };
 
-//     return;
-//   };
+  //     UpdateSalaStatus.mutateAsync(payload)
+
+  //     return;
+  //   };
 
   return { onSubmit, control, handleSubmit, obterUserId, errorsCount: errors };
 }
