@@ -26,8 +26,9 @@ export async function Signin({ email, password }: SigninSchema) {
 
   const { id_usuario, cargo } = data.data as UserLogin;
 
-  await salvarUserId(JSON.stringify(id_usuario));
-  await salvarCargoUsuario(JSON.stringify(cargo));
+  await salvarCargoUsuario(cargo);
+  await salvarUserId(id_usuario)
+
 
   return status;
 }
@@ -89,9 +90,36 @@ export async function BuscarUsuario(id: string): Promise<PerfilUsuario> {
   const u = data.data as PerfilUsuario;
 
   return {
+    id_usuario: u.id_usuario,
     nome: u.nome,
     email: u.email,
     cargo: u.cargo,
     nif: u.nif,
   };
+}
+
+
+//Editar & excluir perfil
+
+export type AtualizarUsuarioDados = {
+  name: string;
+  email: string;
+  nif: string;
+};
+
+export async function AtualizarUsuario(
+  id: string,
+  dados: AtualizarUsuarioDados
+) {
+  const { data } = await api.patch("/api/users/" + id, {
+    ...dados,
+    id_usuario: Number(id),
+  });
+
+  return data;
+}
+
+export async function ExcluirUsuario(id: string): Promise<number> {
+  const { status } = await api.delete(`/api/users/${id}`);
+  return status;
 }

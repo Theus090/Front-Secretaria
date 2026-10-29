@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Contagem } from "../../types/contagem";
 import { Sala } from "../../types/sala";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import CampoTextHookForm from "../CampoTextoHookForm/CampoTextoHookForm";
 import {
   Control,
   FieldValues,
@@ -13,6 +12,8 @@ import {
 } from "react-hook-form";
 import { CountForm, CountSubmit } from "@/ViewModel/useContagemViewModel";
 import useCountViewModel from "@/ViewModel/useCountViewModel";
+import CampoDeTexto from "../CampoDeTexto/CampoDeTexto";
+import CampoTextHookForm from "../CampoTextoHookForm/CampoTextoHookForm";
 
 type CardContagemProps = {
   sala: Sala;
@@ -20,42 +21,36 @@ type CardContagemProps = {
 };
 
 const CardContagem = ({ sala, name }: CardContagemProps) => {
-  const [status, setStatus] = useState();
+  const [statusCont, setStatusCont] = useState(sala.status);
 
-  const { onSubmit, handleSubmit, control } = useCountViewModel();
+  const { onSubmit, handleSubmit, control, errorsCount } = useCountViewModel();
 
   return (
-    <View className="flex items-center justify-around border rounded-lg h-40 p-40">
-      <View className="flex flex-row gap-10">
-        <Text>{sala.nome}</Text>
-        {status === "Pendente" ? (
-          <Text className="text-red-500">{status}</Text>
-        ) : status === "Concluido" ? (
-          <Text className="text-green-500">{status}</Text>
-        ) : (
-          <Text className="text-gray-500">{status || "Sem status"}</Text>
-        )}
+    <View className="flex items-center justify-center h-60 gap-5 rounded-2xl bg-white border-gray-400">
+      <View className="flex flex-row">
+        <Text className="font-bold">{sala.nome}</Text>
       </View>
 
       <View className="flex">
         <Text>Previsão: {sala.quantidade}</Text>
       </View>
 
-      <View className="flex flex-row h-10 gap-10">
+      <View className="flex flex-row gap-10 items-center justify-center">
         <View></View>
         <View className="flex flex-row items-center justify-between gap-10">
           <CampoTextHookForm
-            label="Contagem de Alunos"
-            name={name}
+            name={"count"}
+            label="Contagem de alunos"
+            placeholder="Número de alunos"
             control={control}
+            errorMessage={errorsCount.count?.message}
           />
         </View>
         <View>
           <Pressable
-            onPress={handleSubmit(({ count }) => {
-
-              onSubmit({ count, id_sala: sala.id_sala });
-            })}
+            onPress={() => {
+              handleSubmit(onSubmit(control, sala.id_sala));
+            }}
           >
             <AntDesign name="send" size={24} color="black" />
           </Pressable>

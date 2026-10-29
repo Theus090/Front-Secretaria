@@ -11,6 +11,7 @@ import {
 type CampoDeTextoProps = TextInputProps & {
   label: string;
   placeholder?: string;
+  name?: string;
   viewClassName?: string;
   labelClassName?: string;
   textInputClassName?: string;
@@ -35,10 +36,11 @@ const CampoDeTexto = ({
   errorMessage = "",
   isError,
   setValue,
-  keyboardType = "default",
+  keyboardType = "number-pad",
   secureTextEntry = false,
   autoCapitalize = "sentences",
   autoComplete,
+  name="",
   returnKeyType,
   ...props
 }: CampoDeTextoProps) => {
@@ -58,7 +60,7 @@ const CampoDeTexto = ({
           autoComplete={autoComplete}
           returnKeyType={returnKeyType}
           className={cn(
-            "bg-white px-4 w-72 text-lg rounded-xl h-16",
+            "bg-white px-4 w-20 text-lg rounded-xl h-16",
             textInputClassName
           )}
           {...props}
