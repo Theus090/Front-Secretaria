@@ -18,6 +18,7 @@ export async function salvarCargoUsuario(cargo: string) {
 export async function obterCargo() {
   if (Platform.OS === "web") return null;
   return SecureStore.getItemAsync(USER_ROLE);
+  
 }
 
 export async function removerCargo() {

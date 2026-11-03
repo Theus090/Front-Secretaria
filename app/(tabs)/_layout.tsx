@@ -1,57 +1,86 @@
+
 import { FontAwesome } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Text } from "react-native";
+import { Tabs } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
+
+import useTabsViewModel from "@/ViewModel/useTabsViewModel";
+
 export default function TabsLayout() {
-  return (
-    <Tabs
-      screenOptions={{ tabBarActiveTintColor: "#B40608", headerShown: false }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="adicionar"
-        options={{
-          title: "Adicionar",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="plus-circle" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="contagem"
-        options={{
-          title: "Contagem",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="users" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Perfil",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="user" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="configsDirec"
-        options={{
-          title: "Gerenciamento",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="setting" size={24} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+    const { isLoading, isDiretor } = useTabsViewModel();
+
+    console.log("É diretor?", isDiretor);
+
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
+    return (
+        <Tabs
+            screenOptions={{
+                tabBarActiveTintColor: "#B40608",
+                headerShown: false,
+            }}
+        >
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: "Home",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome size={28} name="home" color={color} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
+                name="adicionar"
+                options={{
+                    title: "Adicionar",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome size={28} name="plus-circle" color={color} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
+                name="contagem"
+                options={{
+                    title: "Contagem",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome size={28} name="users" color={color} />
+                    ),
+                }}
+            />
+
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    title: "Perfil",
+                    tabBarIcon: ({ color }) => (
+                        <FontAwesome size={28} name="user" color={color} />
+                    ),
+                }}
+            />
+
+            <Tabs.Protected guard={isDiretor}>
+                <Tabs.Screen
+                    name="configsDirec"
+                    options={{
+                        title: "Gerenciamento",
+                        tabBarIcon: ({ color, size }) => (
+                            <AntDesign
+                                name="setting"
+                                size={size}
+                                color={color}
+                            />
+                        ),
+                    }}
+                />
+            </Tabs.Protected>
+        </Tabs>
+    );
 }
