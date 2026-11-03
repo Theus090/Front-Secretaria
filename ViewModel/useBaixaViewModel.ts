@@ -1,15 +1,15 @@
+import { obterUserId } from "@/lib/secureStore";
 import { BaixaSchema } from "@/schemas/baixa";
 import { Baixa, CreateBaixa } from "@/service/baixa.service";
 import { GetTaskById } from "@/service/task.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import * as ImagePicker from "expo-image-picker";
 import { useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Alert } from "react-native";
 import z from "zod";
-import * as ImagePicker from "expo-image-picker"
-import { useState } from "react";
-import { obterUserId } from "@/lib/secureStore";
 
 
 export type BaixaFormData = z.infer<typeof BaixaSchema>
@@ -22,9 +22,24 @@ export default function useBaixaViewModel() {
         queryFn: () => GetTaskById(task)
     })
 
+    const [userId, setUserId] = useState<string | null>(null);
     const [imagem, setImagem] = useState<ImagePicker.ImagePickerAsset | null>(null)
+    const [isLoading, setIsLoading] = useState(true);
 
-    const form = useForm<BaixaFormData>({
+    useEffect(() => {
+        obterUserId().then((id) => {
+            setUserId(id);
+            setIsLoading(false);
+        });
+    }, []);
+
+    const {
+        control,
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+    } = useForm<BaixaFormData>({
         resolver: zodResolver(BaixaSchema),
         defaultValues: { observation: "" },
     });
@@ -35,20 +50,21 @@ export default function useBaixaViewModel() {
         onError: () => Alert.alert("Erro ao dar baixa")
     })
 
-    const onSubmit = form.handleSubmit(async (values) => {
-        if (!fetchTaskById.data) {
-            Alert.alert("Erro", "Task não carregada")
+    const onSubmit = (data: BaixaFormData) => {
+        console.log("Aqui")
+
+        if (!userId) {
+            Alert.alert("Sessão não carregada", "Aguarde e tente novamente.")
             return
         }
 
-        const userId = await obterUserId()
-        if (!userId) {
-            Alert.alert("Erro", "Usuário não autenticado")
+        if (!fetchTaskById.data) {
+            Alert.alert("Task nn Carregada  ")
             return
         }
 
         const payload: CreateBaixa = {
-            observation: values.observation,
+            observation: data.observation,
             id_req: fetchTaskById.data.id_requisicao,
             id_user: userId,
             date: new Date().toISOString(),
@@ -62,14 +78,15 @@ export default function useBaixaViewModel() {
         }
 
         handleSubmitBaixa.mutate(payload)
-    })
-
+    }
     return {
         task: fetchTaskById.data,
         onSubmit,
-        control: form.control,
+        control,
+        handleSubmit,
         imagem,
         setImagem,
-        isSubmitting: handleSubmitBaixa.isPending
+        isSubmitting: handleSubmitBaixa.isPending,
+        isLoadingUser: isLoading
     }
 }
