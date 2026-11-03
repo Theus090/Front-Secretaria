@@ -7,7 +7,14 @@ import CabecalhoPerfil from "../../components/CabecalhoPerfil/CabecalhoPerfil";
 import { usePerfilViewModel } from "../../ViewModel/usePerfilViewModel";
 
 const Profile = () => {
-  const { usuario, carregando, erro, abrirEdicao } = usePerfilViewModel();
+  const {
+    usuario,
+    carregando,
+    erro,
+    excluindo,
+    abrirEdicao,
+    confirmarExclusao,
+  } = usePerfilViewModel();
 
   if (carregando) {
     return (
@@ -44,6 +51,20 @@ const Profile = () => {
 
           <Text className="text-white font-semibold text-sm">
             Editar perfil
+          </Text>
+        </Botao>
+
+        <Botao
+          onPress={confirmarExclusao}
+          disabled={excluindo}
+          accessibilityRole="button"
+          accessibilityLabel="Excluir conta"
+          className="w-full min-w-0 p-3 rounded-lg mb-2 flex-row items-center justify-center gap-1.5 bg-[#a32d2d]"
+        >
+          <Ionicons name="trash-outline" size={16} color={CORES.branco} />
+
+          <Text className="text-white font-semibold text-sm">
+            {excluindo ? "Excluindo..." : "Excluir conta"}
           </Text>
         </Botao>
       </View>

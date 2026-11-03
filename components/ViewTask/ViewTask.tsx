@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { Task } from "@/types/";
+import { Task } from "@/types/task";
 
 
 
@@ -7,9 +7,43 @@ type CartaoDeTaskProps = {
   task: Task;
 };
 
-const ViewTask = ({})=>{
-    return(
-            <View className="rounded-xl bg-white p-4 border border-gray-200">
+const ViewTask = ({ task }: CartaoDeTaskProps) => {
+  const corUrgencia = () => {
+    switch (task.urgencia) {
+      case "normal":
+        return "bg-green-500";
+      case "Normal":
+        return "bg-green-500";
+
+      case "Nao-Urgente":
+        return "bg-yellow-500";
+
+      case "Urgente":
+        return "bg-red-500";
+
+      default:
+        return "bg-gray-500";
+    }
+  };
+  const formatarUrgencia = (urgencia: Task["urgencia"]) => {
+    switch (urgencia) {
+      case "Nao-Urgente":
+        return "Não urgente";
+
+      case "Urgente":
+        return "Urgente";
+
+      case "normal":
+        return "Normal";
+
+      default:
+        return urgencia;
+    }
+  };
+
+
+  return (
+    <View className="rounded-xl bg-white p-4 border border-gray-200">
       <View className="flex-row items-center justify-between gap-1">
         <View className="w-3/4">
           <Text className="text-xl font-bold text-black">{task.descricao}</Text>
@@ -31,7 +65,7 @@ const ViewTask = ({})=>{
         </View>
       </View>
     </View>
-    )
+  )
 }
 
 export default ViewTask
