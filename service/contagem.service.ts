@@ -2,7 +2,10 @@ import api from "@/lib/axios.config";
 import type { Sala } from "@/types/sala";
 import { countType } from "../schemas/count.schema";
 import { countSchema } from "../schemas/count.schema";
-import { updateSalaSchema, UpdateSalaType } from "../schemas/sala.schema";
+import {
+  updateCountSchema,
+  UpdateCountType,
+} from "../schemas/countUpdate.schema";
 import { Contagem } from "@/types/contagem";
 import { SalaContagem } from "@/types/salaContagem";
 
@@ -27,7 +30,7 @@ export async function ListSalas(): Promise<Sala[]> {
 export async function ListCountsRoom(): Promise<SalaContagem[]> {
   const { data } = await api.get<ListSalaContagemResponse>("/api/count/find");
 
-  console.log(data.data)
+  console.log(data.data);
 
   return data.data;
 }
@@ -48,16 +51,24 @@ export async function CreateCount({
   return resposta.status;
 }
 
-export async function UpdateStatusSala({
-  id_sala,
-  status,
-}: UpdateSalaType): Promise<number> {
-  console.log({ status });
+// export async function UpdateStatusSala({
+//   id_sala,
+//   status,
+// }: UpdateCountType): Promise<number> {
+//   console.log({ status });
 
-  const resposta = await api.put("/api/room/", {
-    id_sala,
-    status,
-  });
+//   const resposta = await api.put("/api/room/", {
+//     id_sala,
+//     status,
+//   });
+
+//   return resposta.status;
+// }
+
+export async function Deactivate({
+  id,
+}: UpdateCountType): Promise<number> {
+  const resposta = await api.put(`/api/count/close/${id}`);
 
   return resposta.status;
 }

@@ -5,6 +5,8 @@ import { obterCargo } from "@/lib/secureStore";
 
 export type CountForm = { count: number };
 export type CountSubmit = CountForm & { id_sala: string };
+export type CheckCountForm = { status: string };
+export type CheckCountSubmit = CheckCountForm & { id_count: string };
 
 export default function useContagemViewModel() {
   const [cargo, setCargo] = useState<string>("");
