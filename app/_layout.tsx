@@ -1,4 +1,4 @@
-import Header from "@/components/Header/Header";
+import Header from "../components/Header/Header";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { useState } from "react";
@@ -13,6 +13,10 @@ export default function RootLayout() {
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="cadastro" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ header: Header }} />
+        <Stack.Screen //
+          name="editarPerfil"
+          options={{ title: "Editar perfil", headerTintColor: "#7a1414" }}
+        />
         {/* <Stack.Screen name="posts/newPost" /> */}
       </Stack>
     </QueryClientProvider>
