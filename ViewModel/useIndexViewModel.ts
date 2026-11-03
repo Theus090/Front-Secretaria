@@ -1,7 +1,7 @@
 import { signinSchema, SigninSchema } from "@/schemas/signin.schema";
 import { Signin } from "@/service/user.service";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query"; // 1. adicionado useQueryClient
 import { AxiosError } from "axios";
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
@@ -12,6 +12,8 @@ import { Alert } from "react-native";
 
 export default function useIndexViewModel() {
   const router = useRouter();
+  const queryClient = useQueryClient(); // 2. adicionado
+
   //Importando fontes externas
   const [fontsLoaded, fontError] = useFonts({
     "GoogleSans-Regular": require("@/assets/fonts/GoogleSans-Regular.ttf"),
@@ -49,6 +51,8 @@ export default function useIndexViewModel() {
     mutationFn: ({ email, password }: SigninSchema) =>
       Signin({ email, password }),
     onSuccess: async () => {
+      // 3. força o React Query a reler o cargo salvo no SecureStore
+      await queryClient.invalidateQueries({ queryKey: ["session", "cargo"] });
       router.navigate("/(tabs)");
     },
     onError: (error) => {

@@ -46,9 +46,10 @@ export function removerUserId(): Promise<void> {
   return removeItem(USER_ID_KEY);
 }
 
-// ─── cargo ──────────────────────────────────────────────────────────
-export function salvarCargoUsuario(cargo: string): Promise<void> {
-  return setItem(USER_ROLE, normalizarCargo(cargo));
+export async function obterCargo() {
+  if (Platform.OS === "web") return null;
+  return SecureStore.getItemAsync(USER_ROLE);
+  
 }
 
 export async function obterCargo(): Promise<string | null> {
