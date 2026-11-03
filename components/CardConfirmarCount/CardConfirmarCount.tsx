@@ -14,7 +14,7 @@ type CardContagemProps = {
 };
 
 const CardConfirmarCount = ({ salaContagem }: CardContagemProps) => {
-  const { onSubmit, handleSubmit, control, errorsCount } = useCountViewModel();
+  const { onCheck, handleSubmit, control, errorsCount } = useCountViewModel();
 
   return (
     <View className="flex items-center justify-center gap-10 p-5 bg-white rounded-2xl">
@@ -28,20 +28,9 @@ const CardConfirmarCount = ({ salaContagem }: CardContagemProps) => {
 
       <View className="flex flex-row gap-10 items-center justify-center">
         <View></View>
-        <View className="flex flex-row items-center justify-between gap-10">
-          <CampoTextHookForm
-            name={"count"}
-            label="Contagem de alunos"
-            placeholder="Confirmar a contagem"
-            control={control}
-            errorMessage={errorsCount.count?.message}
-          />
-        </View>
         <View>
           <Pressable
-            onPress={() => {
-              // onSubmit({ count, id_sala: sala.id_sala });
-            }}
+            onPress={()=> onCheck(salaContagem.id_contagem)}
           >
             <AntDesign name="send" size={24} color="black" />
           </Pressable>

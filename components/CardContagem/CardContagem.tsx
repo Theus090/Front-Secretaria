@@ -21,7 +21,6 @@ type CardContagemProps = {
 };
 
 const CardContagem = ({ sala, name }: CardContagemProps) => {
-  const [statusCont, setStatusCont] = useState(sala.status);
 
   const { onSubmit, handleSubmit, control, errorsCount } = useCountViewModel();
 
@@ -49,7 +48,7 @@ const CardContagem = ({ sala, name }: CardContagemProps) => {
         <View>
           <Pressable
             onPress={() => {
-              handleSubmit(onSubmit(control, sala.id_sala));
+              handleSubmit(onSubmit(control, sala.id_sala))();
             }}
           >
             <AntDesign name="send" size={24} color="black" />
