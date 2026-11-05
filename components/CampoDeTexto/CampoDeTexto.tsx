@@ -36,7 +36,7 @@ const CampoDeTexto = ({
   errorMessage = "",
   isError,
   setValue,
-  keyboardType = "number-pad",
+  keyboardType = "default",
   secureTextEntry = false,
   autoCapitalize = "sentences",
   autoComplete,
