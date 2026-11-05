@@ -1,5 +1,6 @@
-import { removerUserId } from "@/lib/secureStore";
+import { limparSessao } from "@/lib/secureStore";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useQueryClient } from "@tanstack/react-query";
 import { NativeStackHeaderProps, useRouter } from "expo-router";
 import { Image, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,9 +9,11 @@ import MenuAbas from "../MenuAbas/MenuAbas";
 const Header = (props: NativeStackHeaderProps) => {
   const podeVoltar = props.navigation.canGoBack();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
-    await removerUserId();
+    await limparSessao();
+    queryClient.removeQueries({ queryKey: ["session"] });
 
     if (router.canDismiss()) {
       router.dismissAll();

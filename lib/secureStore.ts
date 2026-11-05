@@ -2,7 +2,7 @@ import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 
 const USER_ID_KEY = "id_usuario";
-const USER_ROLE   = "cargo";
+const USER_ROLE = "cargo";
 
 // ─── one place that knows how to read/write ─────────────────────────
 async function setItem(key: string, value: string): Promise<void> {
@@ -18,7 +18,7 @@ async function getItem(key: string): Promise<string | null> {
   if (Platform.OS === "web") {
     return globalThis.localStorage?.getItem(key) ?? null;
   }
-  return SecureStore.getItemAsync(key);         // already string | null
+  return SecureStore.getItemAsync(key); // already string | null
 }
 
 async function removeItem(key: string): Promise<void> {
@@ -31,25 +31,24 @@ async function removeItem(key: string): Promise<void> {
 
 // ─── user id ────────────────────────────────────────────────────────
 export function salvarUserId(id: string): Promise<void> {
-  return setItem(USER_ID_KEY, String(id));      // always raw
+  return setItem(USER_ID_KEY, String(id)); // always raw
 }
 
 export async function obterUserId(): Promise<string | null> {
-  return getItem(USER_ID_KEY);                  // already a string
+  return getItem(USER_ID_KEY); // already a string
 }
 
 export async function obterIdUsuarioLogado(): Promise<string | null> {
-  return obterUserId();                         // ✅ no JSON.parse
+  return obterUserId(); // ✅ no JSON.parse
 }
 
 export function removerUserId(): Promise<void> {
   return removeItem(USER_ID_KEY);
 }
 
-export async function obterCargo() {
-  if (Platform.OS === "web") return null;
-  return SecureStore.getItemAsync(USER_ROLE);
-  
+// ─── cargo (role) ───────────────────────────────────────────────────
+export function salvarCargoUsuario(cargo: string): Promise<void> {
+  return setItem(USER_ROLE, normalizarCargo(String(cargo)));
 }
 
 export async function obterCargo(): Promise<string | null> {
@@ -61,13 +60,23 @@ export function removerCargo(): Promise<void> {
   return removeItem(USER_ROLE);
 }
 
+// ─── session ────────────────────────────────────────────────────────
+// Always clear id and cargo together so a stale role can't outlive its user.
+export async function limparSessao(): Promise<void> {
+  await Promise.all([removeItem(USER_ID_KEY), removeItem(USER_ROLE)]);
+}
+
 // ─── normalization at the boundary ──────────────────────────────────
 // Kills accidental double-encoding ("\"kitchen\"") and casing drift ("Kitchen").
 export function normalizarCargo(value: string): string {
   let v = value.trim();
   // strip one level of accidental JSON string quoting: "\"kitchen\"" → kitchen
   if (v.length >= 2 && v.startsWith('"') && v.endsWith('"')) {
-    try { v = JSON.parse(v) as string; } catch { /* keep raw */ }
+    try {
+      v = JSON.parse(v) as string;
+    } catch {
+      /* keep raw */
+    }
   }
   return v.trim().toLowerCase();
 }
