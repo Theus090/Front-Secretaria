@@ -1,7 +1,6 @@
 import {
   obterIdUsuarioLogado,
-  removerCargo,
-  removerUserId,
+  limparSessao,
 } from "../lib/secureStore";
 import { BuscarUsuario, ExcluirUsuario } from "../service/user.service";
 import { PerfilUsuario } from "../types/usuario";
@@ -60,8 +59,7 @@ export const usePerfilViewModel = () => {
       await ExcluirUsuario(id);
 
       // Mesmo fluxo do logout do Header: limpa a sessão e volta para o login
-      await removerUserId();
-      await removerCargo();
+      await limparSessao();
 
       if (router.canDismiss()) {
         router.dismissAll();
